@@ -1,0 +1,17 @@
+# 개행은 저장소 안에서 LF 로 통일한다. 집(WSL)·회사(Ubuntu) 어느 쪽에서
+# core.autocrlf 가 켜져 있어도 변환되지 않게 못 박아 둔다.
+* text=auto eol=lf
+
+*.sh   text eol=lf
+*.py   text eol=lf
+*.md   text eol=lf
+*.json text eol=lf
+
+# 시리얼 콘솔 로그의 CRLF 는 실제로 보드가 뱉은 데이터다. 변환 금지.
+logs/*.log -text
+
+# 패치는 개행이 바뀌면 apply 가 실패한다.
+*.patch -text
+
+*.bin binary
+*.pdf binary
