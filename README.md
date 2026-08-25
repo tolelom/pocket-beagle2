@@ -52,3 +52,24 @@ u-boot 트리에 가한 수정은 `patches/`에 패치 파일로 보관한다. �
 curl -L -o ti-linux-firmware/ti-sysfw/ti-fs-firmware-am62x-hs-fs-enc.bin  https://raw.githubusercontent.com/TexasInstruments/ti-linux-firmware/11.02.11/ti-sysfw/ti-fs-firmware-am62x-hs-fs-enc.bin
 curl -L -o ti-linux-firmware/ti-sysfw/ti-fs-firmware-am62x-hs-fs-cert.bin https://raw.githubusercontent.com/TexasInstruments/ti-linux-firmware/11.02.11/ti-sysfw/ti-fs-firmware-am62x-hs-fs-cert.bin
 ```
+
+`BINMAN_INDIRS`는 위 blob 2개가 있는 `ti-linux-firmware/`만 있으면 되고,
+ti-linux-firmware 저장소를 통째로 받을 필요는 없다.
+
+## 빌드
+
+`build-r5.sh`가 1b(R5 패스) 두 빌드를 돌린다. 산출물은 `out/`에 나오고 git에서
+제외된다. 스크립트는 자기가 놓인 자리를 작업 루트로 잡으므로 저장소를 어디에
+두든 상관없다.
+
+binman은 `tools/binman/requirements.txt`의 버전 고정을 요구한다. apt의
+pyelftools는 버전이 낮아 빌드가 깨지므로 venv를 따로 만든다. `venv/`도 git에서
+제외된다.
+
+```
+python3 -m venv venv
+venv/bin/pip install -r u-boot/tools/binman/requirements.txt
+./build-r5.sh
+```
+
+크로스 컴파일러는 `arm-linux-gnueabihf-`다.

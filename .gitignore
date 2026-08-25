@@ -5,5 +5,9 @@
 # 파생 산출물 (clean-serial-log.py로 재생성)
 /logs/*-clean.log
 
+# 빌드 산출물과 파이썬 환경 (build-r5.sh 로 재생성)
+/out/
+/venv/
+
 __pycache__/
 *.pyc
