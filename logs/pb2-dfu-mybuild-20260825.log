@@ -1,0 +1,18 @@
+
+U-Boot SPL 2026.01-gef03e3548837 (Aug 25 2026 - 09:48:12 +0900)
+EEPROM not available at 0x50, trying to read at 0x51
+Reading on-board EEPROM at 0x51 failed -121
+EEPROM not available at 0x50, trying to read at 0x51
+Reading on-board EEPROM at 0x51 failed -121
+EEPROM not available at 0x50, trying to read at 0x51
+Reading on-board EEPROM at 0x51 failed -121
+SYSFW ABI: 4.0 (firmware rev 0x000b '11.2.5--v11.02.05 (Fancy Rat)')
+EEPROM not available at 0x50, trying to read at 0x51
+Reading on-board EEPROM at 0x51 failed -121
+EEPROM not available at 0x50, trying to read at 0x51
+Reading on-board EEPROM at 0x51 failed -121
+Changed A53 CPU frequency to 1400000000Hz (T grade) in DT
+SPL initial stack usage: 13416 bytes
+SPL: Unsupported Boot Device!
+SPL: failed to boot from all boot devices
+### ERROR ### Please RESET the board ###
