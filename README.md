@@ -42,6 +42,9 @@ curl -L -o docs/mspm0l1105.pdf               https://www.ti.com/lit/gpn/mspm0l11
 git clone --depth 1 --branch v2026.01-am62-pocketbeagle2 https://github.com/beagleboard/u-boot.git
 ```
 
+u-boot 트리에 가한 수정은 `patches/`에 패치 파일로 보관한다. 새 클론에는
+`git -C u-boot apply patches/*.patch`로 적용한다.
+
 `ti-linux-firmware/ti-sysfw/`의 TIFS blob 2개는 TexasInstruments/ti-linux-firmware
 저장소 11.02.11 태그에서 받는다.
 

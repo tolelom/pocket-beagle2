@@ -1,0 +1,26 @@
+diff --git a/arch/arm/mach-k3/am62x/am625_init.c b/arch/arm/mach-k3/am62x/am625_init.c
+index 02b7414e..5c4c2cce 100644
+--- a/arch/arm/mach-k3/am62x/am625_init.c
++++ b/arch/arm/mach-k3/am62x/am625_init.c
+@@ -219,6 +219,13 @@ void board_init_f(ulong dummy)
+ 		pinctrl_select_state(dev, "default");
+ 
+ 	preloader_console_init();
++	printf("\n");
++	printf("  _        _      _                \n");
++	printf(" | |_ ___ | | ___| | ___  _ __ ___ \n");
++	printf(" | __/ _ \\| |/ _ \\ |/ _ \\| '_ ` _ \\\n");
++	printf(" | || (_) | |  __/ | (_) | | | | | |\n");
++	printf("  \\__\\___/|_|\\___|_|\\___/|_| |_| |_|\n");
++	printf("       tolelom R5 SPL is alive\n\n");
+ 
+ 	do_board_detect();
+ 
+@@ -292,6 +299,7 @@ void board_init_f(ulong dummy)
+ 		if (ret)
+ 			panic("DRAM init failed: %d\n", ret);
+ 	}
++	printf(">>> tolelom log 2: DDR is up\n");
+ 	spl_enable_cache();
+ 
+ 	fixup_a53_cpu_freq_by_speed_grade();
