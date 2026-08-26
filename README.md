@@ -60,16 +60,50 @@ ti-linux-firmware 저장소를 통째로 받을 필요는 없다.
 
 `build-r5.sh`가 1b(R5 패스) 두 빌드를 돌린다. 산출물은 `out/`에 나오고 git에서
 제외된다. 스크립트는 자기가 놓인 자리를 작업 루트로 잡으므로 저장소를 어디에
-두든 상관없다.
+두든 상관없다. 시작할 때 전제를 확인하고, 빠진 것이 있으면 모아서 보여준 뒤
+멈춘다.
+
+### 호스트 패키지
+
+Ubuntu 24.04 기준이며, `build-r5.sh`가 시작할 때 확인하는 항목과 같다.
+
+```
+sudo apt install gcc-arm-linux-gnueabihf python3-venv python3-dev \
+                 libgnutls28-dev libssl-dev \
+                 gcc make bison flex swig device-tree-compiler pkgconf
+```
+
+크로스 컴파일러는 `arm-linux-gnueabihf-`다. U-Boot는 libc를 쓰지 않지만 libgcc는
+링크하고(`Makefile`의 `PLATFORM_LIBGCC`), K3 문서가 전제하는 것도 이 툴체인이다
+(`doc/board/ti/k3.rst`). `arm-none-eabi`는 기본 타깃이 armv4t이고 libgcc가
+multilib으로 갈라져 있어 조합이 어긋날 여지가 있다.
+
+`python3-dev`는 pylibfdt가 swig로 만든 C 확장을 컴파일할 때 `Python.h`가
+필요해서 든다. `libgnutls28-dev`는 호스트 도구 `mkeficapsule`이,
+`libssl-dev`는 mkimage 계열이 쓴다. U-Boot의 `tools/Makefile`은 `pkg-config`
+실패를 빈 문자열로 넘기므로, 이 헤더들이 없으면 한참 컴파일한 뒤에야 터진다.
+
+### venv
 
 binman은 `tools/binman/requirements.txt`의 버전 고정을 요구한다. apt의
 pyelftools는 버전이 낮아 빌드가 깨지므로 venv를 따로 만든다. `venv/`도 git에서
 제외된다.
 
 ```
-python3 -m venv venv
-venv/bin/pip install -r u-boot/tools/binman/requirements.txt
+/usr/bin/python3 -m venv venv
+venv/bin/pip install -r u-boot/tools/binman/requirements.txt setuptools
 ./build-r5.sh
 ```
 
-크로스 컴파일러는 `arm-linux-gnueabihf-`다.
+`setuptools`는 `requirements.txt`에 없지만 pylibfdt의 `setup.py`가 쓴다.
+Python 3.12부터 venv 부트스트랩에서 빠졌으므로 따로 넣어야 한다.
+
+배포판 python을 절대 경로로 지정하는 이유는 `python3`가 conda 같은 다른 설치를
+가리킬 수 있어서다. venv는 만들 때의 인터프리터에 묶이므로, 그 인터프리터가
+기계마다 다르면 같은 명령이 다른 환경을 만든다.
+
+### 산출물 크기 대조
+
+크기는 같은 기계에서 조건 하나만 바꿔 비교할 때만 지표가 된다. 컴파일러 버전이
+다르면 코드 생성 결과가 달라져 기계 간에는 크기가 일치하지 않는다. 기계를 건너
+확인할 때는 실기기 부팅과 콘솔 배너의 빌드 타임스탬프를 본다.

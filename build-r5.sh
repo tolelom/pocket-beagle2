@@ -16,12 +16,73 @@ UB="$WS/u-boot"
 FW="$WS/ti-linux-firmware"
 VENV="$WS/venv"
 
-# binman 이 요구하는 정확한 파이썬 패키지 버전 (tools/binman/requirements.txt)
-# shellcheck disable=SC1091
-. "$VENV/bin/activate" || { echo "venv 없음: $VENV"; exit 1; }
-
 export CROSS_COMPILE=arm-linux-gnueabihf-
 J=$(nproc)
+
+# 빌드 전에 전제를 확인한다. make 출력은 로그 파일로 빠지므로, 없는 것을
+# 여기서 걸러 내지 않으면 실패 원인이 tail 30 줄 안에서만 보인다.
+# 처음 걸리는 하나에서 멈추지 않고 빠진 것을 모아서 한 번에 보여 준다.
+preflight() {
+    local miss=()
+
+    # 크로스 컴파일러는 arm-none-eabi 가 아니라 gnueabihf 다. U-Boot 는 libc 를
+    # 쓰지 않지만 libgcc 는 링크하며(Makefile 의 PLATFORM_LIBGCC), K3 문서가
+    # 전제하는 것도 gnueabihf 다 (doc/board/ti/k3.rst).
+    command -v "${CROSS_COMPILE}gcc" >/dev/null 2>&1 \
+        || miss+=("크로스 컴파일러 ${CROSS_COMPILE}gcc  -> apt install gcc-arm-linux-gnueabihf")
+
+    local t
+    for t in make bison flex swig dtc pkg-config; do
+        command -v "$t" >/dev/null 2>&1 || miss+=("호스트 도구 $t")
+    done
+
+    # 호스트 도구가 쓰는 개발 헤더. u-boot 의 tools/Makefile 은 pkg-config
+    # 실패를 빈 문자열로 넘기므로, 없으면 한참 컴파일한 뒤에야 터진다.
+    # gnutls 는 mkeficapsule(CONFIG_TOOLS_MKEFICAPSULE), libssl 과 libcrypto 는
+    # mkimage 계열이 쓴다(CONFIG_TOOLS_LIBCRYPTO).
+    pkg-config --exists gnutls 2>/dev/null \
+        || miss+=("GnuTLS 개발 헤더  -> apt install libgnutls28-dev")
+    pkg-config --exists libssl libcrypto 2>/dev/null \
+        || miss+=("OpenSSL 개발 헤더  -> apt install libssl-dev")
+
+    [ -d "$UB" ] || miss+=("u-boot 소스 $UB  -> README 의 클론 명령")
+    [ -f "$UB/configs/am62_pocketbeagle2_r5_defconfig" ] \
+        || miss+=("defconfig am62_pocketbeagle2_r5_defconfig 가 u-boot 트리에 없음")
+
+    # BINMAN_INDIRS 가 찾는 TIFS blob 2개. ti-linux-firmware 전체 클론은 필요 없다.
+    local b
+    for b in ti-fs-firmware-am62x-hs-fs-enc.bin ti-fs-firmware-am62x-hs-fs-cert.bin; do
+        [ -f "$FW/ti-sysfw/$b" ] || miss+=("TIFS blob $FW/ti-sysfw/$b  -> README 의 curl 명령")
+    done
+
+    # binman 이 요구하는 정확한 파이썬 패키지 버전 (tools/binman/requirements.txt).
+    # apt 의 pyelftools 는 버전이 낮아 빌드가 깨지므로 venv 를 쓴다.
+    [ -f "$VENV/bin/activate" ] \
+        || miss+=("venv $VENV  -> README 의 venv 구성 명령")
+
+    if [ ${#miss[@]} -ne 0 ]; then
+        echo "빌드 전제가 갖춰지지 않았다:"
+        printf '  - %s\n' "${miss[@]}"
+        exit 1
+    fi
+
+    # shellcheck disable=SC1091
+    . "$VENV/bin/activate"
+
+    # elftools 는 binman 이, setuptools 는 pylibfdt 의 setup.py 가 쓴다.
+    # setuptools 는 requirements.txt 에 없고 Python 3.12 부터 venv 에도
+    # 딸려오지 않으므로 따로 넣어야 한다.
+    local m
+    for m in elftools setuptools; do
+        python3 -c "import $m" 2>/dev/null || {
+            echo "venv 에 $m 이(가) 없다. README 의 venv 구성 명령을 다시 실행한다:"
+            echo "  venv/bin/pip install -r u-boot/tools/binman/requirements.txt setuptools"
+            exit 1
+        }
+    done
+}
+
+preflight
 
 build() {
     local out="$1"; shift
