@@ -10,7 +10,7 @@ docs/ 의 PDF와 logs/ 의 부트 로그는 발행 대상이 아니다.
 import pathlib
 import sys
 
-sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2]
                        / "tools" / "confluence"))
 from publisher import Publisher  # noqa: E402
 

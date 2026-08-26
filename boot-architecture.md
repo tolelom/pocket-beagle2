@@ -257,7 +257,7 @@ R5 패스가 요구하는 외부 blob은 ti-linux-firmware의
 cd u-boot
 make ARCH=arm O=build-r5 am62_pocketbeagle2_r5_defconfig
 make ARCH=arm O=build-r5 CROSS_COMPILE=arm-none-eabi- \
-     BINMAN_INDIRS=$HOME/Desktop/develop/pocketbeagle/ti-linux-firmware -j$(nproc)
+     BINMAN_INDIRS=$HOME/Desktop/develop/personal/pocketbeagle/ti-linux-firmware -j$(nproc)
 ```
 
 SPL은 freestanding이라 bare-metal 툴체인(arm-none-eabi-gcc 13)으로 빌드된다.
