@@ -25,9 +25,9 @@ J=$(nproc)
 preflight() {
     local miss=()
 
-    # 크로스 컴파일러는 arm-none-eabi 가 아니라 gnueabihf 다. U-Boot 는 libc 를
-    # 쓰지 않지만 libgcc 는 링크하며(Makefile 의 PLATFORM_LIBGCC), K3 문서가
-    # 전제하는 것도 gnueabihf 다 (doc/board/ti/k3.rst).
+    # 크로스 컴파일러는 gnueabihf 다. U-Boot 의 K3 문서가 전제하는 값이다
+    # (doc/board/ti/k3.rst). 이 빌드는 CONFIG_USE_PRIVATE_LIBGCC=y 라
+    # 툴체인 libgcc 를 링크하지 않는다.
     command -v "${CROSS_COMPILE}gcc" >/dev/null 2>&1 \
         || miss+=("크로스 컴파일러 ${CROSS_COMPILE}gcc  -> apt install gcc-arm-linux-gnueabihf")
 

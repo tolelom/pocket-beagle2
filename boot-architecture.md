@@ -256,11 +256,10 @@ R5 패스가 요구하는 외부 blob은 ti-linux-firmware의
 ```
 cd u-boot
 make ARCH=arm O=build-r5 am62_pocketbeagle2_r5_defconfig
-make ARCH=arm O=build-r5 CROSS_COMPILE=arm-none-eabi- \
+make ARCH=arm O=build-r5 CROSS_COMPILE=arm-linux-gnueabihf- \
      BINMAN_INDIRS=$HOME/Desktop/develop/personal/pocketbeagle/ti-linux-firmware -j$(nproc)
 ```
 
-SPL은 freestanding이라 bare-metal 툴체인(arm-none-eabi-gcc 13)으로 빌드된다.
 산출물은 `build-r5/tiboot3-am62x-hs-fs-evm.bin`이고 `tiboot3.bin` 심링크가 같이
 생긴다. 함께 만들어지는 hs-evm(HS-SE용) 이미지의 blob 누락 경고는 이 보드(HS-FS)와
 무관하다. BINMAN_INDIRS 없이 빌드하면 blob 자리를 비운 이미지가 나오고 경고에
@@ -275,6 +274,79 @@ SPL은 freestanding이라 bare-metal 툴체인(arm-none-eabi-gcc 13)으로 빌�
   gnutls 헤더(libgnutls28-dev)를 설치하면 이 처리가 필요 없다.
 - binman의 K3 board-config 처리가 python 모듈 `yamllint`·`jsonschema`를 요구한다.
   binman을 실행하는 python3(PATH 선두의 것)에 설치돼 있어야 한다.
+
+## R5 SPL 어셈블리 구간
+
+ROM이 SRAM으로 점프한 뒤 C 코드에 닿기까지의 경로다. `board_init_f` 이후는 C이므로
+여기 담지 않는다.
+
+### 배치
+
+링커 스크립트는 `arch/arm/mach-omap2/u-boot-spl.lds`다. `board/beagle/pocketbeagle2/Kconfig`가
+`SPL_LDSCRIPT` 기본값으로 이 경로를 지정하고 `scripts/Makefile.xpl`이 그 값을 우선한다.
+같은 이름의 `arch/arm/cpu/u-boot-spl.lds`는 지정이 없을 때 쓰는 폴백이라 이 보드에서는
+쓰이지 않는다.
+
+`.text` 안의 순서는 `*(.vectors)`, `start.o (.text*)`, `*(.text*)`다. 0x43c00000의 첫
+바이트는 `.vectors`이고, start.o는 오브젝트 파일명을 스크립트에 적어 두 번째 자리에
+고정한다. `ENTRY(_start)`는 ELF 헤더의 진입점 필드를 채우는 지시이고 `tiboot3.bin`은
+ELF가 아니므로 ROM은 이 값을 읽지 않는다.
+
+주소 예산은 다음과 같다.
+
+| 대상 | 값 | 출처 |
+| --- | --- | --- |
+| 코드 시작 | 0x43c00000 | `CONFIG_SPL_TEXT_BASE` |
+| 링커 영역 길이 | 0x3b000 | `CONFIG_SPL_MAX_SIZE`, 스크립트의 `MEMORY .sram` |
+| 크기 검사 상한 | 0x3a7f0 | `CONFIG_SPL_SIZE_LIMIT` |
+| 스택 초기값 | 0x43c3a7f0 | `CONFIG_CUSTOM_SYS_INIT_SP_ADDR` |
+| BSS | 0x43c3b000에서 0x3000 | `CONFIG_SPL_BSS_START_ADDR`, `CONFIG_SPL_BSS_MAX_SIZE` |
+| 이사 후 스택 | 0x82000000 | `CONFIG_SPL_STACK_R_ADDR` |
+
+코드 시작 주소는 `common/spl/Kconfig`가 ARCH_K3 non-ARM64에 주는 기본값이고,
+나머지 다섯은 defconfig에 직접 적혀 있다.
+
+링커 영역 길이와 크기 검사 상한은 역할이 다르다. 링커 영역 길이는 스크립트가
+`.sram`에 잡는 길이이고, 크기 검사 상한은 빌드가 이미지 크기를 재는 기준값이다.
+스택 초기값은 코드 시작 주소에 크기 검사 상한을 더한 값이고, 코드가 있는 앞쪽을
+향해 내려오며 자란다. BSS는 링커 영역이 끝나는 주소에서 시작한다.
+
+### 실행 경로
+
+```
+ROM ──> 0x43c00000  벡터 테이블 첫 줄
+          └─> 0x43c00044  reset            arch/arm/cpu/armv7/start.S
+                └─> _main                  arch/arm/lib/crt0.S
+                      ├─> board_init_f     arch/arm/mach-k3/am62x/am625_init.c
+                      └─> board_init_r     common/spl/spl.c
+```
+
+벡터 테이블은 0x44바이트다. 간접 분기 명령 8개(32바이트), 분기할 주소를 담은 표
+8워드(32바이트), 공용 멈춤 루프 하나(4바이트)로 이루어진다. 리셋을 제외한 7종은
+모두 같은 멈춤 루프를 가리킨다. K3는 첫 줄에 `ldr pc, _reset`을 써서 표에 적힌 절대
+주소로 가고, 다른 보드는 `b reset`으로 상대 분기한다.
+
+`reset`이 하는 일은 셋이다. 동작 모드를 SVC로 맞추고, CPSR의 비트 7과 6을 세워 IRQ와
+FIQ를 막고, SCTLR의 V 비트를 0으로 만든다. `CONFIG_HAS_VBAR`가 꺼져 있어 VBAR에는
+아무것도 쓰지 않는다. 인터럽트를 막았고 리셋 외의 벡터가 모두 멈춤 루프이므로 SPL은
+예외를 처리하지 않는 구성이다. 같은 파일의 `cpu_init_cp15`는 바이너리에 남지만 호출되지
+않는다. 호출 지점이 `CONFIG_CPU_V7A` 조건부인데 이 빌드는 `CONFIG_CPU_V7R`이기
+때문이다. 이어지는 `cpu_init_crit`은 `lowlevel_init`으로 분기한다.
+
+`_main`은 스택을 세우고, 스택 꼭대기에서 global data 자리를 떼어내 그 주소를 r9에
+고정하고, BSS를 0으로 채운 뒤 `board_init_f`를 부른다. r9 고정은 컴파일 옵션
+`-ffixed-r9`가 뒷받침한다. BSS 지우기가 `board_init_f`보다 앞에 오는 것은
+`CONFIG_SPL_EARLY_BSS`가 만든 배치다. `board_init_f`에서 돌아오면 DDR이 살아 있으므로
+`spl_relocate_stack_gd`가 스택과 global data를 0x82000000으로 옮기고, 마지막에
+`board_init_r`로 분기한다. 이 분기는 `bl`이 아니라 `ldr lr` 뒤의 `bx lr`이라 돌아오지
+않는다.
+
+### 실제로 컴파일되는 부분만 보는 방법
+
+이 구간의 소스는 `#ifdef`가 많아 원본을 그대로 읽으면 쓰이지 않는 코드가 섞인다.
+빌드 디렉터리에 남는 `.<파일>.o.cmd`가 실제 컴파일 명령을 담고 있으므로, 거기서
+`-c -o <파일>.o`를 `-E`로 바꿔 실행하면 전처리 결과만 나온다. 상대 경로 옵션이 걸려
+있어 빌드 출력 디렉터리에서 실행해야 한다. start.S는 56줄, crt0.S는 39줄로 줄어든다.
 
 ## USB DFU 경로
 

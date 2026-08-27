@@ -65,7 +65,8 @@ ti-linux-firmware 저장소를 통째로 받을 필요는 없다.
 
 ### 호스트 패키지
 
-Ubuntu 24.04 기준이며, `build-r5.sh`가 시작할 때 확인하는 항목과 같다.
+Ubuntu 24.04 기준이다. `build-r5.sh`는 시작할 때 이 목록을 확인하되 `gcc`와
+`python3-venv`·`python3-dev`는 검사하지 않는다.
 
 ```
 sudo apt install gcc-arm-linux-gnueabihf python3-venv python3-dev \
@@ -73,10 +74,10 @@ sudo apt install gcc-arm-linux-gnueabihf python3-venv python3-dev \
                  gcc make bison flex swig device-tree-compiler pkgconf
 ```
 
-크로스 컴파일러는 `arm-linux-gnueabihf-`다. U-Boot는 libc를 쓰지 않지만 libgcc는
-링크하고(`Makefile`의 `PLATFORM_LIBGCC`), K3 문서가 전제하는 것도 이 툴체인이다
-(`doc/board/ti/k3.rst`). `arm-none-eabi`는 기본 타깃이 armv4t이고 libgcc가
-multilib으로 갈라져 있어 조합이 어긋날 여지가 있다.
+크로스 컴파일러는 `arm-linux-gnueabihf-`다. U-Boot의 K3 문서가 전제하는 값이고
+(`doc/board/ti/k3.rst`), `build-r5.sh`도 이 값을 쓴다. 이 빌드는
+`CONFIG_USE_PRIVATE_LIBGCC=y`라 툴체인 libgcc를 링크하지 않고 U-Boot 자체
+구현(`arch/arm/lib/lib.a`)을 쓴다. `arm-none-eabi-`로도 빌드된다.
 
 `python3-dev`는 pylibfdt가 swig로 만든 C 확장을 컴파일할 때 `Python.h`가
 필요해서 든다. `libgnutls28-dev`는 호스트 도구 `mkeficapsule`이,

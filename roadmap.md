@@ -19,6 +19,14 @@
 되돌릴 경로를 먼저 확보한 뒤 위험한 작업을 한다. SD 카드를 건드리지 않는 방법이
 있으면 그쪽을 먼저 쓴다.
 
+## 진행
+
+| 단계 | 상태 |
+| --- | --- |
+| 0. 구제 경로 확보와 구조 파악 | 완료 |
+| 1. 부트로더를 직접 빌드한 것으로 교체 | 진행 중 |
+| 2 이후 | 미착수 |
+
 ## 단계
 
 ### 0. 구제 경로 확보와 구조 파악
@@ -34,18 +42,21 @@
 완료 기준: 콘솔 배너의 빌드 타임스탬프가 소스에서 빌드한 값으로 바뀌고,
 리눅스까지 정상 부팅한다.
 
-```
-1a  U-Boot 소스 확보      beagleboard/u-boot, v2026.01-am62-pocketbeagle2
-1b  R5 패스 빌드          am62_pocketbeagle2_r5_defconfig
-1c  DFU로 검증            SD를 건드리지 않는 구간
-1d  DFU 로더 추가         am62x_r5_usbdfu.config, 다음 단계도 USB로 이어받기
-1e  A53 패스 빌드         tispl.bin, u-boot.img
-1f  SD 교체와 부팅        처음으로 SD에 쓰는 지점
-```
+| 항목 | 내용 | 상태 |
+| --- | --- | --- |
+| 1a | U-Boot 소스 확보. beagleboard/u-boot, v2026.01-am62-pocketbeagle2 | 완료 |
+| 1b | R5 패스 빌드. am62_pocketbeagle2_r5_defconfig | 완료 |
+| 1c | DFU로 검증. SD를 건드리지 않는 구간 | 완료 |
+| 1d | DFU 로더 추가. am62x_r5_usbdfu.config로 다음 단계도 USB로 이어받는다 | 미착수 |
+| 1e | A53 패스 빌드. tispl.bin, u-boot.img | 미착수 |
+| 1f | SD 교체와 부팅. 처음으로 SD에 쓰는 지점 | 미착수 |
 
 이해할 것: K3가 왜 2패스 빌드인지, binman이 서명과 패키징에서 무엇을 하는지,
 FIT 컨테이너의 각 조각이 어느 주소로 올라가는지. TF-A와 OP-TEE가 어디서 들어오는지도
 여기서 갈린다.
+
+R5 SPL의 어셈블리 구간 실행 경로는 [부트 구조와 코어 구성](boot-architecture.md)에
+있다. 완료 기준에 들어가지 않는 곁가지다.
 
 ### 2. 보드를 새로 포팅
 
