@@ -11,3 +11,7 @@
 
 __pycache__/
 *.pyc
+
+# A53 패스 소스 (README 의 클론 명령으로 재취득)
+/trusted-firmware-a/
+/optee_os/

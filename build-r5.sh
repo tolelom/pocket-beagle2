@@ -1,5 +1,5 @@
 #!/bin/bash
-# PocketBeagle 2 — 1b: R5 패스 빌드
+# PocketBeagle 2 - 1b: R5 패스 빌드
 #
 # 산출물: out/r5/tiboot3.bin       (순정, SD 부팅용)
 #         out/r5-dfu/tiboot3.bin   (DFU 이어받기용, 스토리지 부팅 불가)

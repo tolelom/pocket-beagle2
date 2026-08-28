@@ -1,0 +1,12 @@
+diff --git a/board/beagle/pocketbeagle2/pocketbeagle2.env b/board/beagle/pocketbeagle2/pocketbeagle2.env
+index a9341c59..3804581e 100644
+--- a/board/beagle/pocketbeagle2/pocketbeagle2.env
++++ b/board/beagle/pocketbeagle2/pocketbeagle2.env
+@@ -27,3 +27,7 @@ rd_spec=-
+ 
+ kernel_comp_addr_r=0x85000000
+ kernel_comp_size=0x20000000
++
++dfu_alt_info_ram=
++	tispl.bin ram 0x82000000 0x200000;
++	u-boot.img ram 0x82f80000 0x400000
