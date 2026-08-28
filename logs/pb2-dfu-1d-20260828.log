@@ -1,0 +1,26 @@
+
+U-Boot SPL 2026.01-gef03e3548837-dirty (Aug 26 2026 - 09:25:40 +0900)
+
+  _        _      _                
+ | |_ ___ | | ___| | ___  _ __ ___ 
+ | __/ _ \| |/ _ \ |/ _ \| '_ ` _ \
+ | || (_) | |  __/ | (_) | | | | | |
+  \__\___/|_|\___|_|\___/|_| |_| |_|
+       tolelom R5 SPL is alive
+
+EEPROM not available at 0x50, trying to read at 0x51
+Reading on-board EEPROM at 0x51 failed -121
+EEPROM not available at 0x50, trying to read at 0x51
+Reading on-board EEPROM at 0x51 failed -121
+EEPROM not available at 0x50, trying to read at 0x51
+Reading on-board EEPROM at 0x51 failed -121
+SYSFW ABI: 4.0 (firmware rev 0x000b '11.2.5--v11.02.05 (Fancy Rat)')
+>>> tolelom log 2: DDR is up
+EEPROM not available at 0x50, trying to read at 0x51
+Reading on-board EEPROM at 0x51 failed -121
+EEPROM not available at 0x50, trying to read at 0x51
+Reading on-board EEPROM at 0x51 failed -121
+Changed A53 CPU frequency to 1400000000Hz (T grade) in DT
+SPL initial stack usage: 13416 bytes
+Trying to boot from DFU
+dwc3-am62 dwc3-usb@f900000: unable to get ti,syscon-phy-pll-refclk regmap

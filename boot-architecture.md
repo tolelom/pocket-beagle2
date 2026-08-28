@@ -96,7 +96,7 @@ ROM이 이미지를 적재하는 시점에 DDR이 아직 초기화되지 않았�
 | Block | I2C, USB DFU, UART, eMMC, Ethernet, SD raw | 블록 단위 수신 후 X.509 헤더가 차면 M4로 전달 |
 | Filesystem | USB MSC, SD·eMMC 파일시스템 | Block과 동일하되 위치를 파일시스템이 정한다 |
 
-## 부트 이미지 3종
+## 부트 이미지
 
 부트 체인은 BOOT 파티션의 파일 세 개로 구성된다.
 
@@ -250,8 +250,7 @@ R5 패스가 요구하는 외부 blob은 ti-linux-firmware의
 
 ## R5 패스 빌드
 
-소스는 `u-boot/`, blob 2개는 `ti-linux-firmware/ti-sysfw/`에 있다. ti-linux-firmware
-저장소 전체는 필요 없다.
+소스는 `u-boot/`, blob 2개는 `ti-linux-firmware/ti-sysfw/`에 있다.
 
 ```
 cd u-boot
@@ -274,6 +273,61 @@ make ARCH=arm O=build-r5 CROSS_COMPILE=arm-linux-gnueabihf- \
   gnutls 헤더(libgnutls28-dev)를 설치하면 이 처리가 필요 없다.
 - binman의 K3 board-config 처리가 python 모듈 `yamllint`·`jsonschema`를 요구한다.
   binman을 실행하는 python3(PATH 선두의 것)에 설치돼 있어야 한다.
+
+## A53 패스 빌드
+
+`tispl.bin`이 FIT 컨테이너라서 조각을 각기 다른 프로젝트에서 빌드해 binman에 넘긴다.
+DM 펌웨어만 소스 빌드가 아니라 `ti-linux-firmware/ti-dm/am62xx/`의 blob이다.
+
+| 조각 | 출처 | 로드 주소 |
+| --- | --- | --- |
+| atf | trusted-firmware-a | 0x80000000 |
+| tee | optee_os | 0x80080000 |
+| dm | ti-linux-firmware blob | 0x89000000 |
+| spl | u-boot a53 defconfig | 0x82000000 |
+| fdt-0 | 같은 빌드 | 조각마다 다름 |
+
+`tee`에는 FIT에 로드 주소가 없다. U-Boot가 `CONFIG_K3_OPTEE_LOAD_ADDR`로 따로
+처리하기 때문이고 순정 이미지도 같다. 조각마다 데이터 앞에 1,700바이트 X.509
+인증서가 붙으므로 FIT 안의 크기는 원본보다 그만큼 크다.
+
+### 보드 고유 주소
+
+TI 문서의 표준 빌드 인자로는 부팅하지 못한다. TF-A와 OP-TEE가 K3 기본 메모리 맵을
+가정하는데 이 보드는 그와 다르고, 두 프로젝트는 U-Boot의 defconfig를 읽지 않는다.
+
+| 대상 | 기본값 | 이 보드 | 출처 |
+| --- | --- | --- | --- |
+| BL32 (OP-TEE) | 0x9e800000 | 0x80080000 | `CONFIG_K3_OPTEE_LOAD_ADDR` |
+| BL33 (A53 SPL) | 0x80080000 | 0x82000000 | `CONFIG_SPL_TEXT_BASE` |
+| 콘솔 UART | 0번 | 6번 | DT의 `stdout-path = &main_uart6` |
+
+두 주소가 서로 엇갈려 있다. 기본값으로 빌드하면 BL31이 A53 SPL을 OP-TEE 자리에서
+시작하려 한다. 콘솔은 `main_uart6`(0x02860000)인데 TF-A의 `K3_USART`와 OP-TEE의
+`CFG_CONSOLE_UART`는 둘 다 0번이 기본값이고, 계수는 0x10000이라 6번이 그 주소가 된다.
+
+어긋나도 빌드는 통과하고 실행 시 콘솔이 조용한 채로 멈춘다. `build-a53.sh`가 빌드
+끝에 세 프로젝트의 값을 뽑아 대조하고 어긋나면 멈추는 이유가 이것이다. U-Boot는
+`.config`, TF-A는 `bl31.dump`, OP-TEE는 `tee.elf`의 진입점에서 읽는다.
+
+### 빌드
+
+```
+make -C trusted-firmware-a CROSS_COMPILE=aarch64-linux-gnu- ARCH=aarch64 \
+     PLAT=k3 SPD=opteed TARGET_BOARD=lite \
+     K3_USART=6 BL32_BASE=0x80080000 PRELOADED_BL33_BASE=0x82000000
+
+make -C optee_os CROSS_COMPILE=arm-linux-gnueabihf- CROSS_COMPILE64=aarch64-linux-gnu- \
+     PLATFORM=k3-am62x CFG_ARM64_core=y CFG_WITH_SOFTWARE_PRNG=y \
+     CFG_CONSOLE_UART=6 CFG_TZDRAM_START=0x80080000
+
+make -C u-boot O=out/a53 CROSS_COMPILE=aarch64-linux-gnu- \
+     am62_pocketbeagle2_a53_defconfig
+make -C u-boot O=out/a53 CROSS_COMPILE=aarch64-linux-gnu- BINMAN_INDIRS=... \
+     BL31=.../bl31.bin TEE=.../tee-raw.bin
+```
+
+`build-a53.sh`가 이 세 단계를 순서대로 돌린다.
 
 ## R5 SPL 어셈블리 구간
 
@@ -346,7 +400,7 @@ FIQ를 막고, SCTLR의 V 비트를 0으로 만든다. `CONFIG_HAS_VBAR`가 꺼�
 이 구간의 소스는 `#ifdef`가 많아 원본을 그대로 읽으면 쓰이지 않는 코드가 섞인다.
 빌드 디렉터리에 남는 `.<파일>.o.cmd`가 실제 컴파일 명령을 담고 있으므로, 거기서
 `-c -o <파일>.o`를 `-E`로 바꿔 실행하면 전처리 결과만 나온다. 상대 경로 옵션이 걸려
-있어 빌드 출력 디렉터리에서 실행해야 한다. start.S는 56줄, crt0.S는 39줄로 줄어든다.
+있어 빌드 출력 디렉터리에서 실행해야 한다. start.S와 crt0.S 모두 수십 줄로 줄어든다.
 
 ## USB DFU 경로
 
@@ -387,13 +441,75 @@ dfu-util -d 0451:6165 -a 1 -U socid.bin
 dfu-util -d 0451:6165 -a 0 -D tiboot3.bin
 ```
 
-전송 완료 직후 `LIBUSB_ERROR_TIMEOUT`이 나는 것은 장치가 로드한 코드로 넘어가 DFU 상태
-응답을 하지 않기 때문이다.
+전송 완료 직후 `LIBUSB_ERROR_TIMEOUT` 또는 `LIBUSB_ERROR_IO`가 나는 것은 장치가 로드한
+코드로 넘어가 DFU 상태 응답을 하지 않기 때문이다.
 
 순정 `tiboot3.bin`을 이 경로로 전송하면 콘솔에 SPL 배너가 뜬 뒤
 `SPL: Unsupported Boot Device!`에서 멈춘다. `get_boot_device()`가 `BOOT_DEVICE_DFU`를
 반환하는데 이 빌드에 DFU 로더가 컴파일돼 있지 않기 때문이다. `am62x_r5_usbdfu.config`를
 얹어 빌드하면 다음 단계도 DFU로 이어받는다.
+
+fragment를 얹은 빌드를 전송하면 SPL이 자체 DFU 가젯을 올린다. 콘솔은
+`Unsupported Boot Device!` 대신 `Trying to boot from DFU`를 찍고, 호스트에서 보이는 장치
+이름이 ROM의 `AM62x DFU`에서 `USB download gadget`으로 바뀐다. alt도 다음 단계 파일명이
+된다.
+
+```
+alt=0  tispl.bin
+alt=1  u-boot.img
+```
+
+로더는 `common/spl/spl_ram.c`에 있다. `SPL_LOAD_IMAGE_METHOD("DFU", 0, BOOT_DEVICE_DFU,
+spl_ram_load_image)`가 등록하고, `spl_ram_load_image`가
+`spl_dfu_cmd(0, "dfu_alt_info_ram", "ram", "0")`으로 가젯을 띄운 뒤 받은 이미지를 RAM에서
+FIT으로 파싱한다.
+
+fragment는 DFU를 켜는 동시에 `SPL_MMC`·`SPL_FS_FAT`·`SPL_SPI`·`SPL_MTD`·
+`TI_K3_NAVSS_UDMA`를 끈다. SRAM 예산에 둘 다 들어가지 않기 때문이고, 이 이미지는 스토리지
+부팅을 하지 못한다. 순정 defconfig 빌드를 따로 남겨 두는 이유가 이것이다.
+
+가젯이 올라올 때 dwc3 경고가 하나 찍힌다. 열거와 전송은 정상 동작한다. 원인은 확인되지
+않았다.
+
+```
+dwc3-am62 dwc3-usb@f900000: unable to get ti,syscon-phy-pll-refclk regmap
+```
+
+### 전송 주소
+
+`dfu_alt_info_ram`이 데이터를 쓰는 주소와 SPL이 FIT을 읽는 주소
+(`CONFIG_SPL_LOAD_FIT_ADDRESS`)가 같아야 한다. 어긋나면 전송은 `DOWNLOAD ... OK`로
+끝나고 그다음 파싱에서 `Error: -22`가 난다. SPL이 FDT 매직을 못 찾아 legacy 이미지
+경로로 빠지기 때문이다.
+
+K3 공통 `k3_dfu.env`는 `tispl.bin`을 0x80080000, `u-boot.img`를 0x81000000에 둔다.
+이 보드의 R5 defconfig는 FIT을 0x82000000에서 읽으므로 두 값이 맞지 않는다.
+`board/beagle/pocketbeagle2/pocketbeagle2.env`에서 보드 배치에 맞춰 덮어쓴다.
+
+```
+dfu_alt_info_ram=
+	tispl.bin ram 0x82000000 0x200000;
+	u-boot.img ram 0x82f80000 0x400000
+```
+
+`u-boot.img`의 0x82f80000은 A53 defconfig의 `CONFIG_TEXT_BASE`다. 순정 이미지에는
+이 덮어쓰기가 없는데, 배포되는 `tiboot3.bin`에 DFU 로더가 없어 이 경로를 타지
+않기 때문이다.
+
+### 전송 절차
+
+세 이미지를 순서대로 보낸다. 전원을 다시 넣지 않고 이어서 보낸다.
+
+```
+dfu-util -d 0451:6165 -a bootloader -D out/r5-dfu/tiboot3.bin
+dfu-util -R -d 0451:6165 -a tispl.bin  -D out/a53/tispl.bin
+dfu-util -R -d 0451:6165 -a u-boot.img -D out/a53/u-boot.img
+```
+
+각 단계에서 USB가 다시 열거되므로 다음 전송 전에 `dfu-util -l`로 alt가 바뀐 것을
+확인한다. ROM은 `bootloader`·`SocId`, R5 SPL과 A53 SPL은 `tispl.bin`·`u-boot.img`를
+노출한다. SPL이 `### ERROR ### Please RESET the board ###`까지 가면 전원을 다시
+넣어야 ROM으로 돌아간다.
 
 DFU 경로로 부팅하면 SD 부팅에는 나오지 않는 EEPROM 읽기 실패가 찍힌다.
 

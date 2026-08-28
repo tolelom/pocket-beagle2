@@ -47,9 +47,16 @@
 | 1a | U-Boot 소스 확보. beagleboard/u-boot, v2026.01-am62-pocketbeagle2 | 완료 |
 | 1b | R5 패스 빌드. am62_pocketbeagle2_r5_defconfig | 완료 |
 | 1c | DFU로 검증. SD를 건드리지 않는 구간 | 완료 |
-| 1d | DFU 로더 추가. am62x_r5_usbdfu.config로 다음 단계도 USB로 이어받는다 | 미착수 |
-| 1e | A53 패스 빌드. tispl.bin, u-boot.img | 미착수 |
+| 1d | DFU 로더 추가. am62x_r5_usbdfu.config로 다음 단계도 USB로 이어받는다 | 완료 |
+| 1e | A53 패스 빌드. tispl.bin, u-boot.img | 완료 |
 | 1f | SD 교체와 부팅. 처음으로 SD에 쓰는 지점 | 미착수 |
+
+1d의 판정은 콘솔에 `Trying to boot from DFU`가 찍히고 DFU alt가 `tispl.bin`·`u-boot.img`로
+바뀌는 것까지다.
+
+1e는 자체 빌드만으로 ROM에서 U-Boot 셸까지 도달하는 것으로 판정했다. SD 카드를 뽑은
+채 DFU로 세 이미지를 순서대로 보내 `=>` 프롬프트가 명령에 응답하는 것을 확인했다.
+1f가 남았으므로 아직 SD에는 쓰지 않았다.
 
 이해할 것: K3가 왜 2패스 빌드인지, binman이 서명과 패키징에서 무엇을 하는지,
 FIT 컨테이너의 각 조각이 어느 주소로 올라가는지. TF-A와 OP-TEE가 어디서 들어오는지도
@@ -135,7 +142,7 @@ MCU+ SDK는 AM62x의 PRU를 다루지 않는다. 툴체인은 gnupru를 쓴다.
 ## 도구 판단
 
 JTAG 프로브는 UART와 DFU가 둘 다 상태를 보여주지 못하는 구간에서 실제로 막혔을 때
-확보한다. 3단계 DDR 작업은 UART 출력 이전 구간이라 그 지점이 될 가능성이 높다.
+확보한다. 3단계 DDR 작업은 UART 출력 이전 구간이다.
 
 케이블은 다리 있는 Tag-Connect 10핀(`TC2050-IDC-050` 계열)이다. 보드에 정렬 구멍
 3개가 있다. 프로브 쪽 핀 배치는 표준 ARM Cortex-10과 7·9·10번이 다르다. TI XDS

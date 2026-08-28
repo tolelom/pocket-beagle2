@@ -7,7 +7,7 @@
 <!-- colwidth: 200 560 -->
 | 문서 | 내용 |
 |---|---|
-| [부트 구조와 코어 구성](boot-architecture.md) | 코어 배치, 부트 체인, 부트 이미지 3종의 구성, 서명, 부트 모드 결정 구조, 직접 만든 코드로 대체할 수 있는 경계, USB DFU 경로와 복구 수단 |
+| [부트 구조와 코어 구성](boot-architecture.md) | 코어 배치, 부트 체인, 부트 이미지 구성, 서명, 부트 모드 결정 구조, 직접 만든 코드로 대체할 수 있는 경계, USB DFU 경로와 복구 수단 |
 | [브링업 로드맵](roadmap.md) | 브링업 연습 단계별 계획. 단계마다 완료 기준과 이해할 것을 둔다 |
 | [오디오 응용 계획](applications.md) | 오디오 응용 두 가지. 휴대형 플레이어와 악기용 이펙터이며 헤더 신호와 전원 구성을 공유한다 |
 
@@ -56,9 +56,24 @@ curl -L -o ti-linux-firmware/ti-sysfw/ti-fs-firmware-am62x-hs-fs-cert.bin https:
 `BINMAN_INDIRS`는 위 blob 2개가 있는 `ti-linux-firmware/`만 있으면 되고,
 ti-linux-firmware 저장소를 통째로 받을 필요는 없다.
 
+A53 패스는 DM 펌웨어 blob을 하나 더 요구한다. 요구하는 쪽은
+`k3-am62-pocketbeagle2-u-boot.dtsi`의 `ti-dm` 노드다.
+
+```
+curl -L --create-dirs -o ti-linux-firmware/ti-dm/am62xx/ipc_echo_testb_mcu1_0_release_strip.xer5f https://raw.githubusercontent.com/TexasInstruments/ti-linux-firmware/11.02.11/ti-dm/am62xx/ipc_echo_testb_mcu1_0_release_strip.xer5f
+```
+
+`tispl.bin`의 나머지 조각은 소스에서 빌드한다. 태그는 보드가 출하 시 싣고 있던
+것과 같은 값이다.
+
+```
+git clone --depth 1 --branch lts-v2.14.1 https://github.com/ARM-software/arm-trusted-firmware trusted-firmware-a
+git clone --depth 1 --branch 4.9.0 https://github.com/OP-TEE/optee_os optee_os
+```
+
 ## 빌드
 
-`build-r5.sh`가 1b(R5 패스) 두 빌드를 돌린다. 산출물은 `out/`에 나오고 git에서
+`build-r5.sh`가 1b(R5 패스) 두 빌드를, `build-a53.sh`가 1e(A53 패스)를 돌린다. 산출물은 `out/`에 나오고 git에서
 제외된다. 스크립트는 자기가 놓인 자리를 작업 루트로 잡으므로 저장소를 어디에
 두든 상관없다. 시작할 때 전제를 확인하고, 빠진 것이 있으면 모아서 보여준 뒤
 멈춘다.
@@ -92,12 +107,18 @@ pyelftools는 버전이 낮아 빌드가 깨지므로 venv를 따로 만든다. 
 
 ```
 /usr/bin/python3 -m venv venv
-venv/bin/pip install -r u-boot/tools/binman/requirements.txt setuptools
+venv/bin/python3 -m pip install -r u-boot/tools/binman/requirements.txt setuptools cryptography
 ./build-r5.sh
 ```
 
 `setuptools`는 `requirements.txt`에 없지만 pylibfdt의 `setup.py`가 쓴다.
-Python 3.12부터 venv 부트스트랩에서 빠졌으므로 따로 넣어야 한다.
+Python 3.12부터 venv 부트스트랩에서 빠졌으므로 따로 넣어야 한다. `cryptography`는
+OP-TEE의 서명 스크립트가 쓴다.
+
+venv는 만든 자리에 묶인다. `bin/activate`가 절대 경로를 export하고 `bin/pip`의
+shebang도 절대 경로이므로, 저장소를 옮기면 둘 다 없는 경로를 가리킨다. 이때
+`activate`는 조용히 실패해 시스템 python이 잡히므로 저장소를 옮겼으면 venv를
+다시 만든다.
 
 배포판 python을 절대 경로로 지정하는 이유는 `python3`가 conda 같은 다른 설치를
 가리킬 수 있어서다. venv는 만들 때의 인터프리터에 묶이므로, 그 인터프리터가
