@@ -27,6 +27,8 @@ DOCS = [
     ("08-spl-c-code.md", "08. SPL의 C 구간",                   None),
     ("09-binman.md",    "09. 이미지는 어떻게 조립되나",         None),
     ("10-devicetree.md", "10. 디바이스 트리와 SPL",            None),
+    ("11-tisci.md",     "11. 코어 사이의 대화",                 None),
+    ("12-to-linux.md",  "12. U-Boot에서 리눅스까지",            None),
     ("roadmap.md",      "브링업 로드맵",                       None),
     ("applications.md", "오디오 응용 계획",                    None),
 ]
