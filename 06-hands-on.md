@@ -189,8 +189,25 @@ U-Boot 빌드가 `dumpimage`라는 도구를 같이 만들어준다.
 out/a53/tools/dumpimage -l out/a53/tispl.bin
 ```
 
-`-l`은 목록(list)이다. 조각마다 이름, 설명, 크기, 로드 주소가 나온다. 로드 주소가
-비어 있는 조각의 사정은 [04. 소스 받기와 빌드](04-building.md)에 있다.
+`-l`은 목록(list)이다. 조각마다 이름, 설명, 크기, 로드 주소가 나온다.
+
+`tee` 조각만 로드 주소가 안 보이는데, 값이 없는 것이 아니라 `dumpimage`가 그 타입의
+값을 출력하지 않는 것이다. FIT 은 디바이스 트리와 같은 형식이므로 `fdtdump`로 열면
+원래 속성이 그대로 보인다.
+
+```
+fdtdump out/a53/tispl.bin | grep -A12 'tee {'
+```
+
+```
+entry = <0x80080000>;
+load = <0x80080000>;
+os = "tee";
+type = "tee";
+```
+
+도구 출력에 없다고 데이터가 없는 것은 아니다. 한 도구가 안 보여주면 형식을 아는 다른
+도구로 열어본다.
 
 조각을 파일로 꺼낼 수도 있다. `-p`는 몇 번째 조각인지를 가리킨다(0부터).
 
@@ -289,7 +306,36 @@ aarch64-linux-gnu-readelf -h optee_os/out/arm-plat-k3/core/tee.elf | grep Entry
 나오는지 세는 것이고, 빌드 인자가 실제로 반영됐는지 확인하는 방법이다. 넷째는 OP-TEE가
 어느 주소를 기준으로 링크됐는지 ELF 헤더에서 읽는 것이다.
 
-## 6-8. 지금 어느 단계인지 보기
+## 6-8. SPL용 디바이스 트리 들여다보기
+
+SPL은 본체와 다른 DT를 쓴다. 무엇이 빠졌는지 보면 SPL이 어떤 장치를 쓰는지 드러나고,
+드라이버가 노드를 못 찾는 문제도 여기서 잡힌다. 왜 나뉘어 있는지는
+[10. 디바이스 트리와 SPL](10-devicetree.md)에 있다.
+
+DTB는 이진 파일이지만 `fdtdump`로 원본에 가까운 형태로 볼 수 있다.
+
+```
+fdtdump out/r5-dfu/spl/dts/k3-am62-r5-pocketbeagle2.dtb | less
+```
+
+두 DT의 노드 목록을 뽑아 견주면 무엇이 빠졌는지 한눈에 나온다.
+
+```
+diff <(fdtdump out/r5-dfu/dts/dt.dtb    | grep -oE '^\s+[a-z0-9@,-]+ \{' | sort -u) \
+     <(fdtdump out/r5-dfu/spl/dts/*.dtb | grep -oE '^\s+[a-z0-9@,-]+ \{' | sort -u)
+```
+
+특정 노드가 살아남았는지만 보려면 세는 것으로 충분하다.
+
+```
+S=out/r5-dfu/spl/dts/k3-am62-r5-pocketbeagle2.dtb
+fdtdump $S | grep -c 'syscon@4008'              # 0, 빠졌다
+fdtdump $S | grep 'ti,syscon-phy-pll-refclk'    # 가리키는 속성은 남아 있다
+```
+
+이 조합이 실제 경고 하나의 원인이었다.
+
+## 6-9. 지금 어느 단계인지 보기
 
 전송 절차는 [05. DFU로 부팅시키기](05-dfu.md)에 있다. 콘솔을 못 보는 상황에서도
 `lsusb`의 장치 이름만으로 단계가 갈린다.

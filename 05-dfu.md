@@ -171,10 +171,8 @@ dfu-util -R -d 0451:6165 -a u-boot.img -D out/a53/u-boot.img
 dwc3-am62 dwc3-usb@f900000: unable to get ti,syscon-phy-pll-refclk regmap
 ```
 
-원인은 디바이스 트리 쪽이다. `drivers/usb/dwc3/dwc3-am62.c`가 찾는
-`ti,syscon-phy-pll-refclk` 속성은 상위 DT에 있지만, 그 속성이 가리키는 대상 노드
-(`k3-am62-wakeup.dtsi`의 `syscon@4008`)에 `bootph` 태그가 없다. SPL용 DT를 만들 때
-태그 없는 노드가 빠지므로 참조가 끊긴다.
+원인은 SPL용 디바이스 트리에서 참조가 끊긴 것이다. 기전은
+[10. 디바이스 트리와 SPL](10-devicetree.md)에 있다.
 
 ## 5-8. 복구 경로
 

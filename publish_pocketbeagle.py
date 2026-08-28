@@ -24,6 +24,9 @@ DOCS = [
     ("05-dfu.md",       "05. DFU로 부팅시키기",                None),
     ("06-hands-on.md",  "06. 직접 확인해보기",                 None),
     ("07-spl-code.md",  "07. SPL 코드 읽기",                   None),
+    ("08-spl-c-code.md", "08. SPL의 C 구간",                   None),
+    ("09-binman.md",    "09. 이미지는 어떻게 조립되나",         None),
+    ("10-devicetree.md", "10. 디바이스 트리와 SPL",            None),
     ("roadmap.md",      "브링업 로드맵",                       None),
     ("applications.md", "오디오 응용 계획",                    None),
 ]

@@ -107,13 +107,17 @@ tispl.bin (FIT)
 | 조각 | 출처 | 로드 주소 |
 | --- | --- | --- |
 | atf | trusted-firmware-a | 0x80000000 |
-| tee | optee_os | (아래 설명) |
+| tee | optee_os | 0x80080000 |
 | dm | ti-linux-firmware blob | 0x89000000 |
 | spl | u-boot a53 defconfig | 0x82000000 |
 | fdt-0 | 같은 빌드 | 조각마다 다름 |
 
-`tee`만 FIT에 로드 주소가 비어 있다. U-Boot가 `CONFIG_K3_OPTEE_LOAD_ADDR`(이 보드는
-0x80080000)로 따로 처리하기 때문이고, 벤더 이미지도 같다. 빠진 게 아니다.
+이 주소들은 binman 이 디바이스 트리에서 읽어 FIT 에 넣는다. `atf`는
+`CONFIG_K3_ATF_LOAD_ADDR`, `tee`는 `CONFIG_K3_OPTEE_LOAD_ADDR` 값이다.
+
+`dumpimage -l`로 보면 `tee`만 로드 주소가 안 나오는데, 도구가 그 타입의 값을 출력하지
+않는 것이고 FIT 에는 들어 있다. 확인하는 방법은
+[06. 직접 확인해보기](06-hands-on.md)에 있다.
 
 DM 펌웨어만 소스 빌드가 아니라 `ti-linux-firmware/ti-dm/am62xx/`의 blob이다. 이것도
 없으면 빌드는 통과하고 자리만 빈 이미지가 나온다.
@@ -149,12 +153,16 @@ OP-TEE의 `CFG_CONSOLE_UART`는 둘 다 0번이 기본값이다. 계수가 0x100
 
 ### 왜 빌드 인자로 넘겨야 하나
 
-U-Boot의 SPL은 사실 BL31에 주소 정보를 넘긴다. `common/spl/spl_atf.c`가 `bl32_entry`와
-`bl33_entry`를 담은 구조체를 만들어 전달한다.
+TF-A에는 앞 단계가 진입점 정보를 인자로 넘겨주는 방식도 있다. 하지만 TI 플랫폼 코드는
+그 방식을 쓰지 않는다. `plat/ti/common/ti_bl31_setup.c`의
+`bl31_early_platform_setup2`가 인자를 읽지 않고 컴파일 상수를 그대로 진입점에 넣는다.
 
-그런데 TI 플랫폼 코드가 그 값을 쓰지 않는다. `plat/ti/common/ti_bl31_setup.c`의
-`bl31_early_platform_setup2`는 인자를 읽지 않고 `BL32_BASE`와 `PRELOADED_BL33_BASE`
-컴파일 상수를 그대로 진입점에 넣는다. 그래서 빌드할 때 정해줘야 한다.
+```c
+bl32_image_ep_info.pc = BL32_BASE;
+bl33_image_ep_info.pc = PRELOADED_BL33_BASE;
+```
+
+값이 바이너리에 박히므로 빌드할 때 정해줘야 한다.
 
 ### 빌드 명령
 

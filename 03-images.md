@@ -10,7 +10,7 @@
 | 파일 | 크기 | 내용 |
 |---|---|---|
 | `tiboot3.bin` | 282,506 | R5 SPL + R5 DT(`k3-am62-r5-pocketbeagle2`) + `tifsstub-fs/gp/hs` + `dm-tifs` |
-| `tispl.bin` | 946,403 | `atf`(→0x80000000), `tee`, `dm`(→0x89000000), `spl`(→0x82000000), `fdt-0` |
+| `tispl.bin` | 946,403 | `atf`(→0x80000000), `tee`(→0x80080000), `dm`(→0x89000000), `spl`(→0x82000000), `fdt-0` |
 | `u-boot.img` | 895,831 | `uboot`(→0x82f80000), `fdt-0` |
 
 각 파일이 여러 조각을 담고 있다. 예를 들어 `tispl.bin` 하나에 TF-A, OP-TEE, DM 펌웨어,
