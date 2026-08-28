@@ -50,11 +50,10 @@ R5 패스가 요구하는 외부 blob은 ti-linux-firmware의
 ## 4-3. R5 패스
 
 `build-r5.sh`가 이 과정을 돌린다. 핵심은 아래 두 줄이고 나머지는 전제 확인과 로그
-정리다. 스크립트는 이 두 줄을 두 번 돌려 순정 빌드(`out/r5`)와 DFU 빌드(`out/r5-dfu`)를
+정리다. 이 장의 명령은 저장소 루트에서 `W=$PWD`를 잡아둔 상태를 전제한다. 스크립트는 이 두 줄을 두 번 돌려 순정 빌드(`out/r5`)와 DFU 빌드(`out/r5-dfu`)를
 만든다. 왜 두 벌인지는 [05. DFU로 부팅시키기](05-dfu.md)에서 다룬다.
 
 ```
-W=$PWD
 make -C u-boot O=$W/out/r5 ARCH=arm am62_pocketbeagle2_r5_defconfig
 make -C u-boot O=$W/out/r5 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- \
      BINMAN_INDIRS=$W/ti-linux-firmware -j$(nproc)

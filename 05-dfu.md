@@ -34,12 +34,12 @@ alt setting은 하나의 USB 장치가 여러 전송 대상을 노출하는 방�
 설치하는 `60-dfu-util.rules`에는 TI의 VID(0451)가 없어서 규칙을 추가해야 한다. 규칙
 본문은 [00. 준비하기](00-setup.md)에 있고, 각 줄의 의미는 이렇다.
 
-TI VID 를 대상으로 하는 `uaccess` 규칙은 systemd-logind 가 활성 로컬 좌석 사용자에게
-POSIX ACL 을 붙이게 한다. 주의할 점은 ssh 로만 접속한 상태에서는 아무 권한도 부여되지
+TI VID를 대상으로 하는 `uaccess` 규칙은 systemd-logind가 활성 로컬 좌석 사용자에게
+POSIX ACL을 붙이게 한다. 주의할 점은 ssh로만 접속한 상태에서는 아무 권한도 부여되지
 않는다는 것이다. 원격에서 작업한다면 다른 방법이 필요하다.
 
-Debug Probe VID 를 대상으로 하는 규칙 둘은 ModemManager 회피용이다. 이 프로브는
-CDC-ACM 장치로 붙는데, ModemManager 가 모뎀 후보로 오해하고 AT 명령을 보내면서 콘솔을
+Debug Probe VID를 대상으로 하는 규칙 둘은 ModemManager 회피용이다. 이 프로브는
+CDC-ACM 장치로 붙는데, ModemManager가 모뎀 후보로 오해하고 AT 명령을 보내면서 콘솔을
 점유해버린다.
 
 ### 장치 지정은 VID:PID로
@@ -92,8 +92,8 @@ alt=0 bootloader          ->  alt=0 tispl.bin
 alt=1 SocId               ->  alt=1 u-boot.img
 ```
 
-장치 이름이 바뀌는 것이 중요한 표지다. 앞엣것은 ROM이 띄운 DFU이고, 뒤엣것은 우리가
-빌드한 SPL이 직접 올린 가젯이다. 여기까지 오면 우리 코드가 USB를 잡았다는 뜻이다.
+여기까지 오면 우리 코드가 USB를 잡았다는 뜻이다. 장치 이름으로 단계를 가르는 방법은
+[06. 직접 확인해보기](06-hands-on.md)에 있다.
 
 ### 코드 경로
 
