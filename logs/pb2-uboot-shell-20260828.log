@@ -1,0 +1,498 @@
+version
+U-Boot 2026.01-gef03e35version
+U-Boot 2026.01-gef03e3548837-dirty (Aug 28 2026 - 14:19:59 +0900)
+
+aarch64-linux-gnu-gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+GNU ld (GNU Binutils for Ubuntu) 2.42
+=> bdinfo
+boot_params = 0x0000000000000000
+DRAM bank   = 0x0000000000000000
+-> start    = 0x0000000080000000
+-> size     = 0x0000000020000000
+flashstart  = 0x0000000000000000
+flashsize   = 0x0000000000000000
+flashoffset = 0x0000000000000000
+baudrate    = 115200 bps
+relocaddr   = 0x000000009bf1b000
+reloc off   = 0x0000000018f9b000
+Build       = 64-bit
+current eth = unknown
+eth-1addr   = (not set)
+IP addr     = <NULL>
+fdt_blob    = 0x0000000099eea130
+multi_dtb_fit= 0x0000000000000000
+lmb_dump_all:
+ memory.count = 0x1
+ memory[0]	[0x80000000-0x9fffffff], 0x20000000 bytes, flags: none
+ reserved.count = 0x3
+ reserved[0]	[0x80000000-0x8187ffff], 0x1880000 bytes, flags: no-map
+ reserved[1]	[0x98ee7000-0x98ee9fff], 0x3000 bytes, flags: no-notify, no-overwrite
+ reserved[2]	[0x98eea120-0x9fffffff], 0x7115ee0 bytes, flags: no-overwrite
+devicetree  = separate
+serial addr = 0x0000000002860000
+ width      = 0x0000000000000000
+ shift      = 0x0000000000000002
+ offset     = 0x0000000000000000
+ clock      = 0x0000000002dc6c00
+arch_number = 0x0000000000000000
+TLB addr    = 0x000000009bfe0000
+irq_sp      = 0x0000000099eea120
+sp start    = 0x0000000099eea120
+Early malloc usage: 4580 / 8000
+=> coninfo
+List of available devices
+|-- serial@2860000 (IO)
+|   |-- stdin
+|   |-- stdout
+|   |-- stderr
+|-- serial (IO)
+=> mmc list
+mmc@fa10000: 0
+mmc@fa00000: 1
+=> i2c bus
+Bus 3:	i2c@2b200000  (active 3)
+   30: pmic@30, offset len 1, flags 0
+Bus 0:	i2c@20000000
+Bus 4:	i2c@20010000
+Bus 2:	i2c@20020000
+=> i2c dev 0
+Setting bus to 0
+=> i2c probe
+Valid chip addresses:
+=> i2c dev 2
+Setting bus to 2
+=> i2c probe
+Valid chip addresses:
+=> i2c dev 4
+Setting bus to 4
+=> i2c probe
+Valid chip addresses:Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+Timed out in wait_for_event: status=0000
+Check if pads/pull-ups of bus are properly configured
+
+=> <INTERRUPT>
+=> <INTERRUPT>
+=> printenv
+addr_fit=0x90000000
+arch=arm
+args_all=setenv optargs ${optargs} earlycon=ns16550a,mmio32,0x02860000
+args_mmc=run finduuid;setenv bootargs console=${console} ${optargs} root=PARTUUID=${uuid} rw rootfstype=${mmcrootfstype}
+baudrate=115200
+board=pocketbeagle2
+board_name=pocketbeagle2
+boot=mmc
+boot_fdt=try
+boot_fit=0
+boot_rprocs=if test ${dorprocboot} -eq 1 && test ${boot} = mmc; then rproc init; run boot_rprocs_mmc; fi;
+boot_rprocs_mmc=env set rproc_id; env set rproc_fw; env set secure_suffix; if test ${secure_rprocs} -eq 1; then env set secure_suffix -sec; fi; for i in ${rproc_fw_binaries} ; do if test -z "${rproc_id}" ; then env set rproc_id $i; else env set rproc_fw $i${secure_suffix}; run rproc_load_and_boot_one; env set rproc_id; env set rproc_fw; fi; done
+boot_targets=mmc1 mmc0
+bootcmd=run set_led_state_start_load; run envboot; bootflow scan -lb;run set_led_state_fail_load
+bootcmd_ti_mmc=run init_${boot}; if test ${do_main_cpsw0_qsgmii_phyinit} -eq 1; then run main_cpsw0_qsgmii_phyinit; fi; run boot_rprocs; if test ${boot_fit} -eq 1; then run get_fit_${boot}; run get_fit_overlaystring; run run_fit; else; run get_kern_${boot}; run get_fdt_${boot}; run get_overlay_${boot}; run run_kern; fi;
+bootdelay=0
+bootdir=/boot
+bootenvfile=uEnv.txt
+bootmeths=script extlinux efi pxe
+bootpart=1:2
+bootscript=echo Running bootscript from mmc${mmcdev} ...; source ${loadaddr}
+console=ttyS2,115200n8
+cpu=armv8
+dfu_alt_info_emmc=rawemmc raw 0 0x800000 mmcpart 1; rootfs part 0 1; tiboot3.bin.raw raw 0x0 0x400 mmcpart 1; tispl.bin.raw raw 0x400 0x1000 mmcpart 1; u-boot.img.raw raw 0x1400 0x2000 mmcpart 1; u-env.raw raw 0x3400 0x100 mmcpart 1; sysfw.itb.raw raw 0x3600 0x800 mmcpart 1
+dfu_alt_info_mmc=boot part 1 1; rootfs part 1 2; tiboot3.bin fat 1 1; tispl.bin fat 1 1; u-boot.img fat 1 1; uEnv.txt fat 1 1; sysfw.itb fat 1 1
+dfu_alt_info_ospi=tiboot3.bin raw 0x0 0x080000; tispl.bin raw 0x080000 0x200000; u-boot.img raw 0x280000 0x400000; u-boot-env raw 0x680000 0x020000; sysfw.itb raw 0x6c0000 0x100000; rootfs raw 0x800000 0x3800000
+dfu_alt_info_ram=tispl.bin ram 0x82000000 0x200000; u-boot.img ram 0x82f80000 0x400000
+do_main_cpsw0_qsgmii_phyinit=0
+dorprocboot=0
+dtboaddr=0x89000000
+envboot=if mmc dev ${mmcdev}; then if mmc rescan; then echo SD/MMC found on device ${mmcdev}; if test -n "${loadbootscript}" && run loadbootscript; then run bootscript; else if run loadbootenv; then echo Loaded env from ${bootenvfile}; run importbootenv; fi; if test -n $uenvcmd; then echo Running uenvcmd ...; run uenvcmd; fi; fi; fi; fi;
+fdt_addr_r=0x88000000
+fdtaddr=0x88000000
+fdtcontroladdr=99eea130
+fdtfile=ti/k3-am62-pocketbeagle2.dtb
+fdtoverlay_addr_r=0x89000000
+finduuid=part uuid ${boot} ${bootpart} uuid
+get_fdt_mmc=load mmc ${bootpart} ${fdtaddr} ${bootdir}/dtb/${fdtfile}
+get_fit_config=setexpr name_fit_config gsub / _ conf-${fdtfile}
+get_fit_mmc=load mmc ${bootpart} ${addr_fit} ${bootdir}/${name_fit}
+get_fit_overlaystring=for overlay in $name_overlays; do; setexpr name_fit_overlay gsub / _ conf-${overlay}; setenv overlaystring ${overlaystring}'#'${name_fit_overlay}; done;
+get_kern_mmc=load mmc ${bootpart} ${loadaddr} ${bootdir}/${name_kern}
+get_overlay_mmc=fdt address ${fdtaddr}; fdt resize 0x100000; for overlay in $name_overlays; do; load mmc ${bootpart} ${dtboaddr} ${bootdir}/dtb/${overlay} && fdt apply ${dtboaddr}; done;
+importbootenv=echo Importing environment from mmc${mmcdev} ...; env import -t ${loadaddr} ${filesize}
+init_mmc=run args_all args_mmc
+kernel_addr_r=0x82000000
+kernel_comp_addr_r=0x85000000
+kernel_comp_size=0x20000000
+loadaddr=0x82000000
+loadbootenv=fatload mmc ${mmcdev} ${loadaddr} ${bootenvfile}
+loadfdt=load ${devtype} ${bootpart} ${fdtaddr} ${bootdir}/dtb/${fdtfile}
+loadimage=load ${devtype} ${bootpart} ${loadaddr} ${bootdir}/${bootfile}
+mmcboot=if mmc dev ${mmcdev}; then devnum=${mmcdev}; devtype=mmc; if mmc rescan; then echo SD/MMC found on device ${mmcdev}; if run loadimage; then run args_mmc; if test ${boot_fit} -eq 1; then run run_fit; else run mmcloados; fi; fi; fi; fi;
+mmcdev=1
+mmcloados=if test ${boot_fdt} = yes || test ${boot_fdt} = try; then if run get_fdt_mmc; then bootz ${loadaddr} - ${fdtaddr}; else if test ${boot_fdt} = try; then bootz; else echo WARN: Cannot load the DT; fi; fi; else bootz; fi;
+mmcrootfstype=ext4 rootwait
+name_fit=fitImage
+name_kern=Image
+partitions=name=rootfs,start=0,size=-,uuid=${uuid_gpt_rootfs}
+pxefile_addr_r=0x80100000
+ramdisk_addr_r=0x88080000
+rd_spec=-
+rdaddr=0x88080000
+rproc_fw_binaries= 0 /lib/firmware/am62-mcu-m4f0_0-fw
+rproc_load_and_boot_one=if load mmc ${bootpart} $loadaddr ${rproc_fw}; then if rproc load ${rproc_id} ${loadaddr} ${filesize}; then rproc start ${rproc_id}; fi; fi
+run_fit=run get_fit_config; bootm ${addr_fit}#${name_fit_config}${overlaystring}
+run_kern=booti ${loadaddr} ${rd_spec} ${fdtaddr}
+scriptaddr=0x80000000
+secure_rprocs=0
+set_led_state_fail_load= led led-1 off; led led-2 on; led led-3 off; led led-4 on
+set_led_state_start_load=led led-1 on; led led-2 off; led led-3 on; led led-4 off
+soc=k3
+stderr=serial@2860000
+stdin=serial@2860000
+stdout=serial@2860000
+update_to_fit=setenv loadaddr ${addr_fit}; setenv bootfile ${name_fit}
+vendor=beagle
+
+Environment size: 5184/126972 bytes
+=> dm tree
+ Class     Seq    Probed  Driver                Name
+-----------------------------------------------------------
+ root          0  [ + ]   root_driver           root_driver
+ rsa_mod_ex    0  [   ]   mod_exp_sw            |-- mod_exp_sw
+ rtc           0  [   ]   rtc_emul              |-- rtc_emul
+ simple_bus    0  [ + ]   simple_bus            |-- bus@f0000
+ simple_bus    1  [ + ]   simple_bus            |   |-- bus@4000000
+ pinctrl       0  [ + ]   single-pinctrl        |   |   |-- pinctrl@4084000
+ pinconfig     0  [   ]   pinconfig             |   |   |   |-- wkup-uart0-default-pins
+ pinconfig     1  [ + ]   pinconfig             |   |   |   `-- wkup-i2c0-default-pins
+ gpio          0  [   ]   ti_dm6441_gpio        |   |   |-- gpio@4201000
+ remoteproc    0  [   ]   k3_m4                 |   |   `-- m4fss@5000000
+ simple_bus    2  [ + ]   simple_bus            |   |-- bus@b00000
+ simple_bus    3  [ + ]   simple_bus            |   |   |-- bus@43000000
+ soc           0  [ + ]   soc_ti_k3             |   |   |   |-- chipid@14
+ syscon        0  [   ]   syscon                |   |   |   |-- syscon@18
+ syscon        1  [   ]   syscon                |   |   |   |-- ethernet-mac-syscon@200
+ syscon        2  [   ]   syscon                |   |   |   |-- syscon@4008
+ syscon        3  [   ]   syscon                |   |   |   `-- syscon@4018
+ i2c           3  [ + ]   i2c_omap              |   |   `-- i2c@2b200000
+ pmic          0  [ + ]   tps65219_pmic         |   |       `-- pmic@30
+ regulator     0  [ + ]   tps65219_buck         |   |           |-- buck1
+ regulator     1  [ + ]   tps65219_buck         |   |           |-- buck2
+ regulator     2  [ + ]   tps65219_buck         |   |           |-- buck3
+ regulator     3  [ + ]   tps65219_ldo          |   |           |-- ldo1
+ regulator     4  [ + ]   tps65219_ldo          |   |           |-- ldo2
+ regulator     5  [ + ]   tps65219_ldo          |   |           |-- ldo3
+ regulator     6  [ + ]   tps65219_ldo          |   |           `-- ldo4
+ simple_bus    4  [   ]   simple_bus            |   |-- bus@100000
+ simple_bus    5  [ + ]   simple_bus            |   |-- bus@48000000
+ mailbox       0  [ + ]   k3-secure-proxy       |   |   |-- mailbox@4d000000
+ dma           0  [   ]   ti-udma               |   |   |-- dma-controller@485c0100
+ dma           1  [   ]   ti-udma               |   |   `-- dma-controller@485c0000
+ firmware      0  [ + ]   ti_sci                |   |-- system-controller@44043000
+ power_doma    0  [ + ]   ti-sci-pm-domains     |   |   |-- power-controller
+ clk           0  [ + ]   ti-sci-clk            |   |   |-- clock-controller
+ reset         0  [   ]   ti-sci-reset          |   |   |-- reset-controller
+ sysreset      0  [   ]   ti-sci-sysreset       |   |   `-- sysreset
+ pinctrl       1  [ + ]   single-pinctrl        |   |-- pinctrl@f4000
+ pinconfig     2  [ + ]   pinconfig             |   |   |-- led-default-pins
+ pinconfig     3  [ + ]   pinconfig             |   |   |-- main-i2c0-default-pins
+ pinconfig     4  [ + ]   pinconfig             |   |   |-- main-i2c2-default-pins
+ pinconfig     5  [   ]   pinconfig             |   |   |-- main-uart0-default-pins
+ pinconfig     6  [   ]   pinconfig             |   |   |-- main-uart1-default-pins
+ pinconfig     7  [ + ]   pinconfig             |   |   |-- main-uart6-default-pins
+ pinconfig     8  [ + ]   pinconfig             |   |   |-- main-mmc0-default-pins
+ pinconfig     9  [ + ]   pinconfig             |   |   |-- main-mmc1-default-pins
+ pinconfig    10  [ + ]   pinconfig             |   |   |-- vdd-sd-dv-default-pins
+ pinconfig    11  [ + ]   pinconfig             |   |   |-- pmic-irq-default-pins
+ pinconfig    12  [ + ]   pinconfig             |   |   |-- vdd-3v3-sd-default-pins
+ pinconfig    13  [   ]   pinconfig             |   |   |-- usb1-default-pins
+ pinconfig    14  [   ]   pinconfig             |   |   `-- epwm2-default-pins
+ serial        3  [   ]   omap_serial           |   |-- serial@2800000
+ serial        2  [ + ]   omap_serial           |   |-- serial@2860000
+ i2c           0  [ + ]   i2c_omap              |   |-- i2c@20000000
+ i2c           4  [ + ]   i2c_omap              |   |-- i2c@20010000
+ i2c           2  [ + ]   i2c_omap              |   |-- i2c@20020000
+ gpio          1  [ + ]   ti_dm6441_gpio        |   |-- gpio@600000
+ gpio          2  [ + ]   ti_dm6441_gpio        |   |-- gpio@601000
+ mmc           0  [ + ]   am654_sdhci           |   |-- mmc@fa10000
+ blk           0  [   ]   mmc_blk               |   |   |-- mmc@fa10000.blk
+ bootdev       0  [ + ]   mmc_bootdev           |   |   `-- mmc@fa10000.bootdev
+ mmc           1  [ + ]   am654_sdhci           |   |-- mmc@fa00000
+ blk           1  [   ]   mmc_blk               |   |   |-- mmc@fa00000.blk
+ bootdev       1  [ + ]   mmc_bootdev           |   |   `-- mmc@fa00000.bootdev
+ simple_bus    6  [   ]   dwc3-am62             |   |-- dwc3-usb@f900000
+ usb_gadget    0  [   ]   dwc3-generic-periphe  |   |   `-- usb@31000000
+ simple_bus    7  [   ]   dwc3-am62             |   |-- dwc3-usb@f910000
+ usb           1  [   ]   dwc3-generic-host     |   |   `-- usb@31100000
+ simple_bus    8  [   ]   simple_bus            |   `-- bus@fc00000
+ clk           1  [   ]   fixed_factor_clock    |-- clock-divider-oldi
+ regulator     7  [ + ]   regulator_fixed       |-- regulator-1
+ regulator     8  [ + ]   regulator_fixed       |-- regulator-2
+ regulator     9  [ + ]   regulator_fixed       |-- regulator-3
+ regulator    10  [ + ]   gpio regulator        |-- regulator-4
+ regulator    11  [ + ]   regulator_fixed       |-- regulator-5
+ nop           0  [ + ]   gpio_led_wrap         |-- leds
+ led           0  [ + ]   gpio_led              |   |-- led-1
+ led           1  [ + ]   gpio_led              |   |-- led-2
+ led           2  [ + ]   gpio_led              |   |-- led-3
+ led           3  [ + ]   gpio_led              |   `-- led-4
+ tee           0  [ + ]   optee                 |-- optee
+ firmware      1  [   ]   psci                  |-- psci
+ bootstd       0  [ + ]   bootstd_drv           |-- bootstd
+ bootmeth      0  [ + ]   bootmeth_extlinux     |   |-- extlinux
+ bootmeth      1  [ + ]   bootmeth_script       |   |-- script
+ bootmeth      2  [   ]   bootmeth_efi_mgr      |   |-- efi_mgr
+ bootmeth      3  [ + ]   bootmeth_efi          |   |-- efi
+ bootmeth      4  [ + ]   bootmeth_pxe          |   |-- pxe
+ bootmeth      5  [   ]   vbe_simple            |   `-- vbe_simple
+ efi           0  [   ]   EFI block driver      `-- efi
+=> 

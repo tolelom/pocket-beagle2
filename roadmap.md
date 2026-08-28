@@ -1,6 +1,6 @@
 # 브링업 로드맵
 
-> 보드를 브링업하고 SDK를 만드는 과정을 미리 연습하기 위한 단계별 계획이다. PocketBeagle 2(AM6254)를 연습 대상으로 쓴다. 구조 사실은 [부트 구조와 코어 구성](boot-architecture.md)에 있다.
+> 보드를 브링업하고 SDK를 만드는 과정을 미리 연습하기 위한 단계별 계획이다. PocketBeagle 2(AM6254)를 연습 대상으로 쓴다. 구조 사실은 [README](README.md)의 목차에서 각 장으로 들어간다.
 
 ## 목표
 
@@ -62,8 +62,7 @@
 FIT 컨테이너의 각 조각이 어느 주소로 올라가는지. TF-A와 OP-TEE가 어디서 들어오는지도
 여기서 갈린다.
 
-R5 SPL의 어셈블리 구간 실행 경로는 [부트 구조와 코어 구성](boot-architecture.md)에
-있다. 완료 기준에 들어가지 않는 곁가지다.
+R5 SPL의 어셈블리 구간 실행 경로는 [07. SPL 코드 읽기](07-spl-code.md)에 있다. 완료 기준에 들어가지 않는 곁가지다.
 
 ### 2. 보드를 새로 포팅
 
@@ -75,6 +74,25 @@ R5 SPL의 어셈블리 구간 실행 경로는 [부트 구조와 코어 구성](
 
 설계팀 보드를 받았을 때 하는 일이 이 단계다. 기존 포팅이 정답지로 남아 있어
 막혔을 때 대조할 수 있다.
+
+이 보드의 포팅이 실제로 어떤 파일 집합인지 세어보면 규모가 잡힌다.
+
+| 파일 | 줄 수 | 성격 |
+| --- | --- | --- |
+| `configs/am62_pocketbeagle2_r5_defconfig` | 109 | 손으로 쓰는 설정 |
+| `configs/am62_pocketbeagle2_a53_defconfig` | 127 | 손으로 쓰는 설정 |
+| `include/configs/pocketbeagle2.h` | 14 | 공통 헤더를 include 만 함 |
+| `arch/arm/dts/k3-am62-r5-pocketbeagle2.dts` | 103 | R5 용 DT |
+| `arch/arm/dts/k3-am62-pocketbeagle2-u-boot.dtsi` | 315 | U-Boot 전용 DT 보강 |
+| `arch/arm/dts/k3-am62-pocketbeagle2-ddr4-1600MTs.dtsi` | 2194 | DDR 타이밍, 도구 생성 |
+| `dts/upstream/src/arm64/ti/k3-am62-pocketbeagle2.dts` | 564 | 상위 DT |
+| `board/beagle/pocketbeagle2/pocketbeagle2.c` | 198 | 보드 코드 |
+| `board/beagle/pocketbeagle2/pocketbeagle2.env` | 33 | 환경변수 |
+| `board/beagle/pocketbeagle2/*.yaml` | 1408 | 전원·자원·보안 설정, 대부분 SoC 공통 |
+
+합이 5천 줄쯤 되지만 손으로 쓰는 부분은 훨씬 적다. DDR 타이밍(2194줄)은 TI 도구가
+뽑아주고, yaml 넷 중 `rm-cfg`(981줄)와 `sec-cfg`(379줄)는 SoC 공통이라 레퍼런스를
+그대로 쓴다. 실제로 보드마다 다른 것은 defconfig 둘, DT 셋, 보드 코드와 환경변수다.
 
 ### 3. DDR 설정
 

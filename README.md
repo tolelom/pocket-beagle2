@@ -1,26 +1,79 @@
-# PocketBeagle 2
+# PocketBeagle 2 부트로더 직접 만들기
 
-> 개인 학습용 보드(Rev A1, AM6254) 자료 보관처다.
+> 개인 학습용 보드(Rev A1, AM6254)로 부트로더를 소스에서 빌드해 올려보는 기록이다. 벤더가 준 이미지를 쓰는 대신 ROM부터 U-Boot 셸까지 전부 자기 손으로 만든 것으로 채우는 과정을 다룬다.
 
-## 문서
+## 이 문서가 다루는 것
 
-<!-- colwidth: 200 560 -->
+PC 개발을 하다 임베디드로 넘어오면 부팅이 낯설다. 전원을 넣으면 알아서 되던 것이,
+갑자기 여러 코어와 여러 파일과 여러 프로젝트가 얽힌 과정으로 보인다.
+
+이 문서는 그 과정을 한 겹씩 벗겨본 기록이다. 순서대로 읽으면 부팅이 왜 여러 단계인지,
+각 단계에서 무엇이 실행되는지, 그리고 그중 어디를 직접 만든 코드로 바꿀 수 있는지
+알게 된다.
+
+특정 보드(PocketBeagle 2)를 대상으로 하지만, TI K3 계열이면 대부분 같고 다른 SoC도
+구조는 비슷하다.
+
+## 목차
+
+| 장 | 내용 |
+|---|---|
+| [00. 준비하기](00-setup.md) | 보드 연결, 호스트 패키지, venv, 소스와 blob 받기 |
+| [01. 보드와 칩](01-hardware.md) | 코어가 왜 이렇게 많은가, 부팅에 관여하는 코어 셋 |
+| [02. 부팅은 어떻게 일어나는가](02-boot-flow.md) | 전체 흐름, 부팅 장치 결정, 우리가 바꿀 수 있는 경계 |
+| [03. 부트 이미지와 서명](03-images.md) | 파일 셋, FIT 컨테이너, 서명 키를 안 구해도 되는 이유 |
+| [04. 소스 받기와 빌드](04-building.md) | 2패스 빌드, 세 프로젝트 조립, 반드시 맞춰야 하는 주소 |
+| [05. DFU로 부팅시키기](05-dfu.md) | SD를 건드리지 않는 실험 경로, 전송 절차, 복구 |
+| [06. 직접 확인해보기](06-hands-on.md) | 보드에서 읽기, 이미지 뜯어보기, 부팅 전 검증 |
+| [07. SPL 코드 읽기](07-spl-code.md) | 어셈블리 구간, 메모리 배치, C를 부르기까지 |
+
+곁가지 문서 둘이 더 있다.
+
 | 문서 | 내용 |
 |---|---|
-| [부트 구조와 코어 구성](boot-architecture.md) | 코어 배치, 부트 체인, 부트 이미지 구성, 서명, 부트 모드 결정 구조, 직접 만든 코드로 대체할 수 있는 경계, USB DFU 경로와 복구 수단 |
-| [브링업 로드맵](roadmap.md) | 브링업 연습 단계별 계획. 단계마다 완료 기준과 이해할 것을 둔다 |
-| [오디오 응용 계획](applications.md) | 오디오 응용 두 가지. 휴대형 플레이어와 악기용 이펙터이며 헤더 신호와 전원 구성을 공유한다 |
+| [브링업 로드맵](roadmap.md) | 커스텀 보드를 받았을 때의 순서를 연습하는 단계별 계획 |
+| [오디오 응용 계획](applications.md) | 이 보드로 만들 오디오 기기 두 가지 |
+
+## 미리 정리하는 용어
+
+뒤에서 계속 나오는 말들이다. 처음에는 이름만 익혀두고 자세한 것은 해당 장에서 본다.
+
+| 말 | 뜻 |
+|---|---|
+| SPL | Secondary Program Loader. U-Boot가 만드는 축소판 로더. SRAM에 들어갈 크기로 만들어 DRAM을 켜고 다음 단계를 읽어 들인다 |
+| TF-A | ARM Trusted Firmware-A. ARM이 정한 보안 펌웨어 표준 구현. 이 보드에서는 BL31 하나만 쓴다 |
+| OP-TEE | 리눅스와 나란히 도는 작은 보안 운영체제. ARM TrustZone 위에서 실행된다 |
+| BL31, BL32, BL33 | TF-A가 쓰는 단계 이름. 각각 보안 감시자, 보안 OS(OP-TEE), 일반 세계 부트로더(U-Boot) |
+| FIT | Flattened Image Tree. 여러 조각과 그 메타데이터를 하나로 묶은 이미지 형식 |
+| DT, DTB | 디바이스 트리. 하드웨어 구성을 적은 자료 구조이고, 컴파일된 이진 형태가 DTB다 |
+| DFU | USB 표준의 펌웨어 전송 규격. SD 카드 없이 부트로더를 보낼 때 쓴다 |
+| binman | U-Boot 빌드가 이미지를 조립할 때 쓰는 도구. 조각을 모아 FIT을 만들고 서명한다 |
+| 스트랩 | 전원 인가 시 저항으로 고정해둔 설정. 소프트웨어로 바꿀 수 없다 |
+
+## 저장소 구성
+
+```
+build-r5.sh      R5 패스 빌드 (tiboot3.bin)
+build-a53.sh     A53 패스 빌드 (tispl.bin, u-boot.img)
+patches/         u-boot 트리에 가한 수정
+logs/            시리얼 콘솔 캡처
+docs/            SRM, TRM, 데이터시트 (git 제외)
+out/             빌드 산출물 (git 제외)
+```
+
+`u-boot/`, `trusted-firmware-a/`, `optee_os/`, `venv/`도 git에서 제외된다. 받는 방법은
+[00. 준비하기](00-setup.md)에 있다.
 
 ## 참고 자료
 
-`pocketbeagle-2-srm.pdf`는 시스템 레퍼런스 매뉴얼 2026-06-04판이다. 아래 명령으로
-받는다.
+`docs/pocketbeagle-2-srm.pdf`는 시스템 레퍼런스 매뉴얼 2026-06-04판이다.
 
 ```
 curl -L -o docs/pocketbeagle-2-srm.pdf https://docs.beagleboard.org/pocketbeagle-2.pdf
 ```
 
-HTML 원본은 [docs.beagleboard.org](https://docs.beagleboard.org/boards/pocketbeagle-2/)에 있다.
+HTML 원본은 [docs.beagleboard.org](https://docs.beagleboard.org/boards/pocketbeagle-2/)에
+있다.
 
 SoC 문서는 TI에서 받는다. 부팅은 TRM 5장이다.
 
@@ -32,100 +85,3 @@ curl -L -o docs/mspm0l1105.pdf               https://www.ti.com/lit/gpn/mspm0l11
 
 문헌번호 없이 받으면 최신 리비전으로 리다이렉트된다. 위 파일명은 받은 시점의
 리비전(TRM Rev C, 데이터시트 Rev C)이다.
-
-## 빌드 재료
-
-`u-boot/`는 beagleboard/u-boot의 shallow 클론이고 git에서 제외된다. 저장소·브랜치·
-커밋은 [boot-architecture.md](boot-architecture.md) 소스 트리 절에 있다.
-
-```
-git clone --depth 1 --branch v2026.01-am62-pocketbeagle2 https://github.com/beagleboard/u-boot.git
-```
-
-u-boot 트리에 가한 수정은 `patches/`에 패치 파일로 보관한다. 새 클론에는
-`git -C u-boot apply patches/*.patch`로 적용한다.
-
-`ti-linux-firmware/ti-sysfw/`의 TIFS blob 2개는 TexasInstruments/ti-linux-firmware
-저장소 11.02.11 태그에서 받는다.
-
-```
-curl -L -o ti-linux-firmware/ti-sysfw/ti-fs-firmware-am62x-hs-fs-enc.bin  https://raw.githubusercontent.com/TexasInstruments/ti-linux-firmware/11.02.11/ti-sysfw/ti-fs-firmware-am62x-hs-fs-enc.bin
-curl -L -o ti-linux-firmware/ti-sysfw/ti-fs-firmware-am62x-hs-fs-cert.bin https://raw.githubusercontent.com/TexasInstruments/ti-linux-firmware/11.02.11/ti-sysfw/ti-fs-firmware-am62x-hs-fs-cert.bin
-```
-
-`BINMAN_INDIRS`는 위 blob 2개가 있는 `ti-linux-firmware/`만 있으면 되고,
-ti-linux-firmware 저장소를 통째로 받을 필요는 없다.
-
-A53 패스는 DM 펌웨어 blob을 하나 더 요구한다. 요구하는 쪽은
-`k3-am62-pocketbeagle2-u-boot.dtsi`의 `ti-dm` 노드다.
-
-```
-curl -L --create-dirs -o ti-linux-firmware/ti-dm/am62xx/ipc_echo_testb_mcu1_0_release_strip.xer5f https://raw.githubusercontent.com/TexasInstruments/ti-linux-firmware/11.02.11/ti-dm/am62xx/ipc_echo_testb_mcu1_0_release_strip.xer5f
-```
-
-`tispl.bin`의 나머지 조각은 소스에서 빌드한다. 태그는 보드가 출하 시 싣고 있던
-것과 같은 값이다.
-
-```
-git clone --depth 1 --branch lts-v2.14.1 https://github.com/ARM-software/arm-trusted-firmware trusted-firmware-a
-git clone --depth 1 --branch 4.9.0 https://github.com/OP-TEE/optee_os optee_os
-```
-
-## 빌드
-
-`build-r5.sh`가 1b(R5 패스) 두 빌드를, `build-a53.sh`가 1e(A53 패스)를 돌린다. 산출물은 `out/`에 나오고 git에서
-제외된다. 스크립트는 자기가 놓인 자리를 작업 루트로 잡으므로 저장소를 어디에
-두든 상관없다. 시작할 때 전제를 확인하고, 빠진 것이 있으면 모아서 보여준 뒤
-멈춘다.
-
-### 호스트 패키지
-
-Ubuntu 24.04 기준이다. `build-r5.sh`는 시작할 때 이 목록을 확인하되 `gcc`와
-`python3-venv`·`python3-dev`는 검사하지 않는다.
-
-```
-sudo apt install gcc-arm-linux-gnueabihf python3-venv python3-dev \
-                 libgnutls28-dev libssl-dev \
-                 gcc make bison flex swig device-tree-compiler pkgconf
-```
-
-크로스 컴파일러는 `arm-linux-gnueabihf-`다. U-Boot의 K3 문서가 전제하는 값이고
-(`doc/board/ti/k3.rst`), `build-r5.sh`도 이 값을 쓴다. 이 빌드는
-`CONFIG_USE_PRIVATE_LIBGCC=y`라 툴체인 libgcc를 링크하지 않고 U-Boot 자체
-구현(`arch/arm/lib/lib.a`)을 쓴다. `arm-none-eabi-`로도 빌드된다.
-
-`python3-dev`는 pylibfdt가 swig로 만든 C 확장을 컴파일할 때 `Python.h`가
-필요해서 든다. `libgnutls28-dev`는 호스트 도구 `mkeficapsule`이,
-`libssl-dev`는 mkimage 계열이 쓴다. U-Boot의 `tools/Makefile`은 `pkg-config`
-실패를 빈 문자열로 넘기므로, 이 헤더들이 없으면 한참 컴파일한 뒤에야 터진다.
-
-### venv
-
-binman은 `tools/binman/requirements.txt`의 버전 고정을 요구한다. apt의
-pyelftools는 버전이 낮아 빌드가 깨지므로 venv를 따로 만든다. `venv/`도 git에서
-제외된다.
-
-```
-/usr/bin/python3 -m venv venv
-venv/bin/python3 -m pip install -r u-boot/tools/binman/requirements.txt setuptools cryptography
-./build-r5.sh
-```
-
-`setuptools`는 `requirements.txt`에 없지만 pylibfdt의 `setup.py`가 쓴다.
-Python 3.12부터 venv 부트스트랩에서 빠졌으므로 따로 넣어야 한다. `cryptography`는
-OP-TEE의 서명 스크립트가 쓴다.
-
-venv는 만든 자리에 묶인다. `bin/activate`가 절대 경로를 export하고 `bin/pip`의
-shebang도 절대 경로이므로, 저장소를 옮기면 둘 다 없는 경로를 가리킨다. 이때
-`activate`는 조용히 실패해 시스템 python이 잡히므로 저장소를 옮겼으면 venv를
-다시 만든다.
-
-배포판 python을 절대 경로로 지정하는 이유는 `python3`가 conda 같은 다른 설치를
-가리킬 수 있어서다. venv는 만들 때의 인터프리터에 묶이므로, 그 인터프리터가
-기계마다 다르면 같은 명령이 다른 환경을 만든다.
-
-### 산출물 크기 대조
-
-크기는 같은 기계에서 조건 하나만 바꿔 비교할 때만 지표가 된다. 컴파일러 버전이
-다르면 코드 생성 결과가 달라져 기계 간에는 크기가 일치하지 않는다. 기계를 건너
-확인할 때는 실기기 부팅과 콘솔 배너의 빌드 타임스탬프를 본다.

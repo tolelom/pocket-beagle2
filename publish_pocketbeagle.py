@@ -15,10 +15,17 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2]
 from publisher import Publisher  # noqa: E402
 
 DOCS = [
-    ("README.md",             "PocketBeagle 2",        None),
-    ("boot-architecture.md",  "부트 구조와 코어 구성", None),
-    ("roadmap.md",            "브링업 로드맵",         None),
-    ("applications.md",       "오디오 응용 계획",      None),
+    ("README.md",       "PocketBeagle 2 부트로더 직접 만들기", None),
+    ("00-setup.md",     "00. 준비하기",                        None),
+    ("01-hardware.md",  "01. 보드와 칩",                       None),
+    ("02-boot-flow.md", "02. 부팅은 어떻게 일어나는가",        None),
+    ("03-images.md",    "03. 부트 이미지와 서명",              None),
+    ("04-building.md",  "04. 소스 받기와 빌드",                None),
+    ("05-dfu.md",       "05. DFU로 부팅시키기",                None),
+    ("06-hands-on.md",  "06. 직접 확인해보기",                 None),
+    ("07-spl-code.md",  "07. SPL 코드 읽기",                   None),
+    ("roadmap.md",      "브링업 로드맵",                       None),
+    ("applications.md", "오디오 응용 계획",                    None),
 ]
 
 Publisher(doc_dir=pathlib.Path(__file__).resolve().parent,
