@@ -1,14 +1,46 @@
 {
  "README.md": {
   "id": "1444151439",
-  "version": 12
+  "version": 13
  },
  "roadmap.md": {
   "id": "1444380691",
-  "version": 11
+  "version": 12
  },
  "applications.md": {
   "id": "1443954831",
-  "version": 10
+  "version": 11
+ },
+ "00-setup.md": {
+  "id": "1452703918",
+  "version": 2
+ },
+ "01-hardware.md": {
+  "id": "1452507306",
+  "version": 2
+ },
+ "02-boot-flow.md": {
+  "id": "1452572838",
+  "version": 2
+ },
+ "03-images.md": {
+  "id": "1451786619",
+  "version": 2
+ },
+ "04-building.md": {
+  "id": "1452703937",
+  "version": 2
+ },
+ "05-dfu.md": {
+  "id": "1452474654",
+  "version": 2
+ },
+ "06-hands-on.md": {
+  "id": "1452638345",
+  "version": 2
+ },
+ "07-spl-code.md": {
+  "id": "1452245213",
+  "version": 2
  }
 }
