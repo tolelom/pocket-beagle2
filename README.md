@@ -63,7 +63,7 @@ build-r5.sh      R5 패스 빌드 (tiboot3.bin)
 build-a53.sh     A53 패스 빌드 (tispl.bin, u-boot.img)
 patches/         u-boot 트리에 가한 수정
 logs/            시리얼 콘솔 캡처
-docs/            SRM, TRM, 데이터시트 (git 제외)
+datasheets/      SRM, TRM, 데이터시트 (git 제외)
 out/             빌드 산출물 (git 제외)
 ```
 
@@ -72,10 +72,10 @@ out/             빌드 산출물 (git 제외)
 
 ## 참고 자료
 
-`docs/pocketbeagle-2-srm.pdf`는 시스템 레퍼런스 매뉴얼 2026-06-04판이다.
+`datasheets/pocketbeagle-2-srm.pdf`는 시스템 레퍼런스 매뉴얼 2026-06-04판이다.
 
 ```
-curl -L -o docs/pocketbeagle-2-srm.pdf https://docs.beagleboard.org/pocketbeagle-2.pdf
+curl -L -o datasheets/pocketbeagle-2-srm.pdf https://docs.beagleboard.org/pocketbeagle-2.pdf
 ```
 
 HTML 원본은 [docs.beagleboard.org](https://docs.beagleboard.org/boards/pocketbeagle-2/)에
@@ -84,9 +84,9 @@ HTML 원본은 [docs.beagleboard.org](https://docs.beagleboard.org/boards/pocket
 SoC 문서는 TI에서 받는다. 부팅은 TRM 5장이다.
 
 ```
-curl -L -o docs/am62x-trm-spruiv7c.pdf       https://www.ti.com/lit/pdf/spruiv7
-curl -L -o docs/am62x-datasheet-sprsp58c.pdf https://www.ti.com/lit/pdf/sprsp58
-curl -L -o docs/mspm0l1105.pdf               https://www.ti.com/lit/gpn/mspm0l1105
+curl -L -o datasheets/am62x-trm-spruiv7c.pdf       https://www.ti.com/lit/pdf/spruiv7
+curl -L -o datasheets/am62x-datasheet-sprsp58c.pdf https://www.ti.com/lit/pdf/sprsp58
+curl -L -o datasheets/mspm0l1105.pdf               https://www.ti.com/lit/gpn/mspm0l1105
 ```
 
 문헌번호 없이 받으면 최신 리비전으로 리다이렉트된다. 위 파일명은 받은 시점의

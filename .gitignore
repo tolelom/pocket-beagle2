@@ -1,5 +1,5 @@
 # 재취득 가능한 대용량 자료 (명령은 README)
-/docs/*.pdf
+/datasheets/*.pdf
 /u-boot/
 
 # 파생 산출물 (clean-serial-log.py로 재생성)

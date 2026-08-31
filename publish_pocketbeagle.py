@@ -5,7 +5,7 @@
   python3 publish_pocketbeagle.py sync   본문 발행
 
 인덱스 페이지는 개인 스페이스 「개인 공부」 폴더(1400897555) 아래에 있다.
-docs/ 의 PDF와 logs/ 의 부트 로그는 발행 대상이 아니다.
+datasheets/ 의 PDF와 logs/ 의 부트 로그는 발행 대상이 아니다.
 """
 import pathlib
 import sys
