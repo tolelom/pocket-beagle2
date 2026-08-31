@@ -14,19 +14,19 @@ PC 개발을 하다 임베디드로 넘어오면 부팅이 낯설다. 전원을 
 
 | 장 | 내용 |
 |---|---|
-| [00. 준비하기](00-setup.md) | 보드 연결, 호스트 패키지, venv, 소스와 blob 받기 |
-| [01. 보드와 칩](01-hardware.md) | 코어가 왜 이렇게 많은가, 부팅에 관여하는 코어 셋 |
-| [02. 부팅은 어떻게 일어나는가](02-boot-flow.md) | 전체 흐름, 부팅 장치 결정, 우리가 바꿀 수 있는 경계 |
-| [03. 부트 이미지와 서명](03-images.md) | 파일 셋, FIT 컨테이너, 서명 키를 안 구해도 되는 이유 |
-| [04. 소스 받기와 빌드](04-building.md) | 2패스 빌드, 세 프로젝트 조립, 반드시 맞춰야 하는 주소 |
-| [05. DFU로 부팅시키기](05-dfu.md) | SD를 건드리지 않는 실험 경로, 전송 절차, 복구 |
-| [06. 직접 확인해보기](06-hands-on.md) | 보드에서 읽기, 이미지 뜯어보기, 부팅 전 검증 |
-| [07. SPL 코드 읽기](07-spl-code.md) | 어셈블리 구간, 메모리 배치, C를 부르기까지 |
-| [08. SPL의 C 구간](08-spl-c-code.md) | 콘솔 로그와 코드 대응, DDR을 켜는 곳, 다음 단계 고르기 |
-| [09. 이미지는 어떻게 조립되나](09-binman.md) | binman, FIT 만들기, 서명, 외부 파일 전달 |
-| [10. 디바이스 트리와 SPL](10-devicetree.md) | SPL용 DT가 따로인 이유, bootph 태그, 참조가 끊기는 함정 |
-| [11. 코어 사이의 대화](11-tisci.md) | TISCI, Secure Proxy, 코어를 깨우는 순서 |
-| [12. U-Boot에서 리눅스까지](12-to-linux.md) | bootflow, extlinux, 커널에 넘기는 것, 부팅 시간 |
+| [00. 준비하기](guide/00-setup.md) | 보드 연결, 호스트 패키지, venv, 소스와 blob 받기 |
+| [01. 보드와 칩](guide/01-hardware.md) | 코어가 왜 이렇게 많은가, 부팅에 관여하는 코어 셋 |
+| [02. 부팅은 어떻게 일어나는가](guide/02-boot-flow.md) | 전체 흐름, 부팅 장치 결정, 우리가 바꿀 수 있는 경계 |
+| [03. 부트 이미지와 서명](guide/03-images.md) | 파일 셋, FIT 컨테이너, 서명 키를 안 구해도 되는 이유 |
+| [04. 소스 받기와 빌드](guide/04-building.md) | 2패스 빌드, 세 프로젝트 조립, 반드시 맞춰야 하는 주소 |
+| [05. DFU로 부팅시키기](guide/05-dfu.md) | SD를 건드리지 않는 실험 경로, 전송 절차, 복구 |
+| [06. 직접 확인해보기](guide/06-hands-on.md) | 보드에서 읽기, 이미지 뜯어보기, 부팅 전 검증 |
+| [07. SPL 코드 읽기](guide/07-spl-code.md) | 어셈블리 구간, 메모리 배치, C를 부르기까지 |
+| [08. SPL의 C 구간](guide/08-spl-c-code.md) | 콘솔 로그와 코드 대응, DDR을 켜는 곳, 다음 단계 고르기 |
+| [09. 이미지는 어떻게 조립되나](guide/09-binman.md) | binman, FIT 만들기, 서명, 외부 파일 전달 |
+| [10. 디바이스 트리와 SPL](guide/10-devicetree.md) | SPL용 DT가 따로인 이유, bootph 태그, 참조가 끊기는 함정 |
+| [11. 코어 사이의 대화](guide/11-tisci.md) | TISCI, Secure Proxy, 코어를 깨우는 순서 |
+| [12. U-Boot에서 리눅스까지](guide/12-to-linux.md) | bootflow, extlinux, 커널에 넘기는 것, 부팅 시간 |
 
 곁가지 문서 둘이 더 있다.
 
@@ -58,6 +58,7 @@ PC 개발을 하다 임베디드로 넘어오면 부팅이 낯설다. 전원을 
 ## 저장소 구성
 
 ```
+guide/           00~12 장 본문
 build-r5.sh      R5 패스 빌드 (tiboot3.bin)
 build-a53.sh     A53 패스 빌드 (tispl.bin, u-boot.img)
 patches/         u-boot 트리에 가한 수정
@@ -67,7 +68,7 @@ out/             빌드 산출물 (git 제외)
 ```
 
 `u-boot/`, `trusted-firmware-a/`, `optee_os/`, `venv/`도 git에서 제외된다. 받는 방법은
-[00. 준비하기](00-setup.md)에 있다.
+[00. 준비하기](guide/00-setup.md)에 있다.
 
 ## 참고 자료
 

@@ -11,55 +11,55 @@
   "id": "1443954831",
   "version": 13
  },
- "00-setup.md": {
+ "guide/00-setup.md": {
   "id": "1452703918",
   "version": 4
  },
- "01-hardware.md": {
+ "guide/01-hardware.md": {
   "id": "1452507306",
   "version": 4
  },
- "02-boot-flow.md": {
+ "guide/02-boot-flow.md": {
   "id": "1452572838",
   "version": 4
  },
- "03-images.md": {
+ "guide/03-images.md": {
   "id": "1451786619",
   "version": 4
  },
- "04-building.md": {
+ "guide/04-building.md": {
   "id": "1452703937",
   "version": 4
  },
- "05-dfu.md": {
+ "guide/05-dfu.md": {
   "id": "1452474654",
   "version": 4
  },
- "06-hands-on.md": {
+ "guide/06-hands-on.md": {
   "id": "1452638345",
   "version": 4
  },
- "07-spl-code.md": {
+ "guide/07-spl-code.md": {
   "id": "1452245213",
   "version": 4
  },
- "08-spl-c-code.md": {
+ "guide/08-spl-c-code.md": {
   "id": "1452245299",
   "version": 3
  },
- "09-binman.md": {
+ "guide/09-binman.md": {
   "id": "1452081661",
   "version": 3
  },
- "10-devicetree.md": {
+ "guide/10-devicetree.md": {
   "id": "1452802194",
   "version": 3
  },
- "11-tisci.md": {
+ "guide/11-tisci.md": {
   "id": "1452638392",
   "version": 2
  },
- "12-to-linux.md": {
+ "guide/12-to-linux.md": {
   "id": "1451852317",
   "version": 2
  }
