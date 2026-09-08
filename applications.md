@@ -69,19 +69,20 @@ USB 가젯 클럭과 BT 송신 클럭이 서로 다른 소스에서 나온다. �
 ### 단계
 
 ```
+0  전제 검증    iPhone과 맥의 음질 차이가 코덱 때문인지 판정 (지출 0)
 1  검증        RPi 3B+ 온보드 BT로 송신 파이프라인 검증 (PB2 밖, 지출 0)
 2  수신기       LDAC 수신기 확보 후 LDAC 송신 검증
 3  이식        PB2로 이식. USB1 배선, 가젯과 송신 동시 동작
-4  재제작       Buildroot 최소 이미지. 부팅 수 초, read-only 루트
 ```
 
-기기 계획서는 hardware 저장소 `devices/ldac-dongle.md`가 기준이고, 이 문서는
-PocketBeagle 2 관점의 설계만 담는다.
+완주 뒤의 2차 계획은 Buildroot 최소 이미지(부팅 수 초, read-only 루트)다.
+
+기기 계획서는 hardware 저장소 `devices/ldac-dongle.md`가 기준이다.
 
 ## 플레이어
 
 microSD 음원을 재생하는 플레이어. 기기 계획서는 hardware 저장소 `devices/audio-player.md`가
-기준이고, 이 절은 PocketBeagle 2 관점의 설계만 담는다.
+기준이다.
 
 ### 1세대: 거치형
 
