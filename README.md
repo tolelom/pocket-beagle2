@@ -64,3 +64,7 @@ logs/               시리얼 콘솔 캡처
 | `venv/` | 빌드용 파이썬 환경 | [00장](guide/00-setup.md) 0-3 |
 | `out/` | 빌드 산출물 | `build-r5.sh`, `build-a53.sh` |
 | `logs/*-clean.log` | 정리한 로그 | `clean-serial-log.py` |
+
+## 라이선스
+
+문서와 로그는 CC BY 4.0, 스크립트는 MIT, `patches/`는 U-Boot와 같은 GPL-2.0이다. 상세는 [LICENSE](LICENSE).
