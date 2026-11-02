@@ -4,7 +4,7 @@
 
 ## 목표
 
-커스텀 보드를 받았을 때 밟는 순서를 같은 순서로 한 번 겪어두는 것이다. 부팅이 안 될
+커스텀 보드를 받았을 때 밟는 순서를 한 번 겪어두는 것이다. 부팅이 안 될
 때 어디를 봐야 하는지, 증상이 하드웨어인지 소프트웨어인지, 무엇을 묶어야 SDK가 되는지를
 보드에서 직접 확인한다.
 
@@ -75,13 +75,13 @@ R5 SPL의 어셈블리 구간 실행 경로는 [07. SPL 코드 읽기](guide/07-
 설계팀 보드를 받았을 때 하는 일이 이 단계다. 기존 포팅이 정답지로 남아 있어
 막혔을 때 대조할 수 있다.
 
-이 보드의 포팅이 실제로 어떤 파일 집합인지 세어보면 규모가 잡힌다.
+이 보드의 포팅은 아래 파일 집합이다.
 
 | 파일 | 줄 수 | 성격 |
 | --- | --- | --- |
 | `configs/am62_pocketbeagle2_r5_defconfig` | 109 | 손으로 쓰는 설정 |
 | `configs/am62_pocketbeagle2_a53_defconfig` | 127 | 손으로 쓰는 설정 |
-| `include/configs/pocketbeagle2.h` | 14 | 공통 헤더를 include 만 함 |
+| `include/configs/pocketbeagle2.h` | 14 | 공통 헤더 include만 |
 | `arch/arm/dts/k3-am62-r5-pocketbeagle2.dts` | 103 | R5 용 DT |
 | `arch/arm/dts/k3-am62-pocketbeagle2-u-boot.dtsi` | 315 | U-Boot 전용 DT 보강 |
 | `arch/arm/dts/k3-am62-pocketbeagle2-ddr4-1600MTs.dtsi` | 2194 | DDR 타이밍, 도구 생성 |

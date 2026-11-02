@@ -1,6 +1,6 @@
 # 09. 이미지는 어떻게 조립되나
 
-> `make` 한 번에 `tiboot3.bin`과 `tispl.bin`이 나오는데, 그 안에서 조각을 모으고 서명하는 일을 binman이 한다. 보드를 새로 포팅할 때 손대야 하는 부분이라 구조를 알아둘 값어치가 있다.
+> `make` 한 번에 `tiboot3.bin`과 `tispl.bin`이 나오는데, 그 안에서 조각을 모으고 서명하는 일을 binman이 한다. 보드를 새로 포팅할 때 손대야 하는 부분이라 구조를 알아둘 만하다.
 
 ## 9-1. binman이 무엇인가
 
@@ -28,9 +28,9 @@ binman의 접근은 "무엇을 어떻게 조립할지를 디바이스 트리로 
 각각 `tiboot3-am62x-hs-evm.bin`, `tiboot3-am62x-hs-fs-evm.bin`, `ti-spl`, `u-boot`을
 만든다.
 
-앞의 둘이 나뉜 것은 장치 보안 상태 때문이다. 우리 보드는 HS-FS라
+앞의 둘이 나뉜 것은 장치 보안 상태 때문이다. 이 보드는 HS-FS라
 `tiboot3-am62x-hs-fs-evm.bin` 쪽을 쓰고, 여기에만 `symlink = "tiboot3.bin"`이 붙어
-있다. 다른 하나(HS-SE용)도 같이 만들어지는데 우리 보드와 무관하다.
+있다. 다른 하나(HS-SE용)도 같이 만들어지는데 이 보드와 무관하다.
 [04. 소스 받기와 빌드](04-building.md)에서 무시해도 된다고 한 경고가 그쪽에서 나온다.
 
 ## 9-3. tiboot3.bin: 통째로 하나의 서명
@@ -89,7 +89,7 @@ ti-spl {
 };
 ```
 
-`insert-template`가 핵심이다. `arch/arm/dts/k3-binman.dtsi`의 `ti_spl_template`를
+`insert-template`은 `arch/arm/dts/k3-binman.dtsi`의 `ti_spl_template`를
 가져다 깔고 그 위에 보드 고유 부분을 얹는다. K3 계열이 공유하는 뼈대는 한 곳에 두고
 보드마다 다른 것만 따로 적는 구조다.
 
@@ -111,8 +111,6 @@ atf {
     atf: atf-bl31 { };
 };
 ```
-
-읽을 것이 셋이다.
 
 **로드 주소가 Kconfig 값이다.** `CONFIG_K3_ATF_LOAD_ADDR`가 그대로 들어간다. 즉
 defconfig를 고치면 FIT의 로드 주소가 바뀐다. [04. 소스 받기와 빌드](04-building.md)에서
@@ -142,7 +140,7 @@ binman build -u -d $(binman_dtb) -O . -m \
   ...
 ```
 
-`-a`가 인자 전달이다. 우리가 `make`에 넘긴 `BL31=`과 `TEE=`가 여기로 흘러들어가
+`-a`가 인자 전달이다. `make`에 넘긴 `BL31=`과 `TEE=`가 여기로 흘러들어가
 `atf-bl31`, `tee-os` 항목의 파일 경로가 된다.
 
 `-I`가 파일 검색 경로다. `BINMAN_INDIRS`가 여기 붙는다. DM 펌웨어처럼 dtsi에 파일
