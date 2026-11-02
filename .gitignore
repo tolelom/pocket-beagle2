@@ -5,7 +5,7 @@
 # TI 펌웨어 blob (받는 명령은 guide/00-setup.md)
 /ti-linux-firmware/
 
-# Confluence 발행 스크립트와 페이지 ID (회사 PC 로컬 전용)
+# Confluence 발행 스크립트와 페이지 ID (발행 환경 로컬 전용)
 /publish_pocketbeagle.py
 /pages.json
 

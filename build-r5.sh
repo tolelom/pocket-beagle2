@@ -9,8 +9,8 @@
 # (doc/board/ti/am62x_sk.rst 3.1.1)
 set -u
 
-# 저장소 위치를 홈에 묶지 않는다. 집(WSL)과 회사(Ubuntu)의 홈 경로가 달라도
-# 스크립트가 놓인 자리를 작업 루트로 잡으면 양쪽에서 그대로 돈다.
+# 저장소 위치를 홈에 묶지 않는다. 기계마다 홈 경로가 달라도
+# 스크립트가 놓인 자리를 작업 루트로 잡으면 어디서든 그대로 돈다.
 WS="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 UB="$WS/u-boot"
 FW="$WS/ti-linux-firmware"
