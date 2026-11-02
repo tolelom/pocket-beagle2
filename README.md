@@ -23,7 +23,6 @@
 | 문서 | 내용 |
 |---|---|
 | [브링업 로드맵](roadmap.md) | 단계별 계획과 진행 상태 |
-| [오디오 응용 계획](applications.md) | 이 보드로 만들 오디오 기기 |
 
 ## 용어
 
@@ -48,7 +47,6 @@
 ```
 guide/              00~12장
 roadmap.md          브링업 로드맵
-applications.md     오디오 응용 계획
 build-r5.sh         R5 패스 빌드 (tiboot3.bin)
 build-a53.sh        A53 패스 빌드 (tispl.bin, u-boot.img)
 clean-serial-log.py 시리얼 로그에서 제어 문자 제거 (*-clean.log 생성)
