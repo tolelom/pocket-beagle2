@@ -2,6 +2,13 @@
 /datasheets/*.pdf
 /u-boot/
 
+# TI 펌웨어 blob (받는 명령은 guide/00-setup.md)
+/ti-linux-firmware/
+
+# Confluence 발행 스크립트와 페이지 ID (회사 PC 로컬 전용)
+/publish_pocketbeagle.py
+/pages.json
+
 # 파생 산출물 (clean-serial-log.py로 재생성)
 /logs/*-clean.log
 

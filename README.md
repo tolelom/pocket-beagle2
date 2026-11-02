@@ -64,6 +64,7 @@ build-a53.sh     A53 패스 빌드 (tispl.bin, u-boot.img)
 patches/         u-boot 트리에 가한 수정
 logs/            시리얼 콘솔 캡처
 datasheets/      SRM, TRM, 데이터시트 (git 제외)
+ti-linux-firmware/  TI 펌웨어 blob (git 제외)
 out/             빌드 산출물 (git 제외)
 ```
 
