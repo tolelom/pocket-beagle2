@@ -117,6 +117,21 @@ curl -L --create-dirs -o ti-linux-firmware/ti-dm/am62xx/ipc_echo_testb_mcu1_0_re
 앞의 둘은 R5 패스가, 마지막 하나는 A53 패스가 쓴다. ti-linux-firmware 저장소를 통째로
 받을 필요는 없다.
 
+### 참고 문서
+
+보드 문서는 BeagleBoard, SoC 문서는 TI에서 받는다. 부팅은 TRM 5장이다.
+
+```
+curl -L --create-dirs -o datasheets/pocketbeagle-2-srm.pdf https://docs.beagleboard.org/pocketbeagle-2.pdf
+curl -L -o datasheets/am62x-trm-spruiv7c.pdf       https://www.ti.com/lit/pdf/spruiv7
+curl -L -o datasheets/am62x-datasheet-sprsp58c.pdf https://www.ti.com/lit/pdf/sprsp58
+curl -L -o datasheets/mspm0l1105.pdf               https://www.ti.com/lit/gpn/mspm0l1105
+```
+
+SRM의 HTML 원본은 [docs.beagleboard.org](https://docs.beagleboard.org/boards/pocketbeagle-2/)에
+있다. 문헌번호 없이 받으면 최신 리비전으로 리다이렉트된다. 위 파일명은 받은 시점의
+리비전(SRM 2026-06-04판, TRM Rev C, 데이터시트 Rev C)이다.
+
 ## 0-5. udev 규칙
 
 DFU로 부트로더를 보내려면 일반 사용자가 USB 장치를 열 수 있어야 한다. `dfu-util`

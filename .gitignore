@@ -1,4 +1,4 @@
-# 재취득 가능한 대용량 자료 (명령은 README)
+# 재취득 가능한 대용량 자료 (명령은 guide/00-setup.md)
 /datasheets/*.pdf
 /u-boot/
 
