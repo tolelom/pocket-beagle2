@@ -77,12 +77,12 @@ USB 가젯 클럭과 BT 송신 클럭이 서로 다른 소스에서 나온다. �
 
 완주 뒤의 2차 계획은 Buildroot 최소 이미지(부팅 수 초, read-only 루트)다.
 
-기기 계획서는 hardware 저장소 `devices/ldac-dongle.md`가 기준이다.
+기기 계획서는 hardware 저장소 `devices/ldac-dongle.md`에 있다.
 
 ## 플레이어
 
-microSD 음원을 재생하는 플레이어. 기기 계획서는 hardware 저장소 `devices/audio-player.md`가
-기준이다.
+microSD 음원을 재생하는 플레이어. 기기 계획서는 hardware 저장소 `devices/audio-player.md`에
+있다.
 
 ### 1세대: 거치형
 
@@ -109,7 +109,7 @@ SPI LCD와 인코더. DAC 클럭 구조(마스터 클럭을 SoC가 줄지 DAC가
 ## 이펙터 (Teensy로 이관)
 
 악기용 페달은 Teensy 4.1 + Audio Shield 트랙으로 확정됐다. 계획서는 hardware
-저장소 `devices/bass-effector.md`.
+저장소 `devices/bass-effector.md`에 있다.
 
 PB2는 2세대 후보로 남는다. 넘어가는 조건은 리눅스와 A53급 연산이 실제로 필요해지는
 것이다: 신경망 앰프 모델링(A53 4코어와 NEON), 임펄스 응답·프리셋·루퍼 녹음용

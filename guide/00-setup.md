@@ -4,7 +4,7 @@
 
 ## 0-1. 보드 연결
 
-케이블이 둘 필요하다. 하나로는 안 된다.
+케이블이 둘 필요하다.
 
 - **USB-C 케이블**: 보드에 전원을 공급한다. 호스트 PC에 연결하면 DFU 통신도 이 선으로
   한다.
@@ -68,16 +68,16 @@ venv/bin/python3 -m pip install -r u-boot/tools/binman/requirements.txt setuptoo
 3.12부터 venv 부트스트랩에서 빠졌으므로 따로 넣어야 한다. `cryptography`는 OP-TEE의
 서명 스크립트가 쓴다.
 
-배포판 python을 절대 경로(`/usr/bin/python3`)로 지정하는 이유가 있다. 그냥 `python3`로
-하면 conda 같은 다른 설치를 가리킬 수 있는데, venv는 만들 때의 인터프리터에 묶이므로
+배포판 python을 절대 경로(`/usr/bin/python3`)로 지정하는 것은 그냥 `python3`로 하면
+conda 같은 다른 설치를 가리킬 수 있기 때문이다. venv는 만들 때의 인터프리터에 묶이므로
 기계마다 다른 환경이 만들어진다.
 
 ### venv는 만든 자리에 묶인다
 
-이건 함정이다. `bin/activate`가 절대 경로를 export하고 `bin/pip`의
+`bin/activate`가 절대 경로를 export하고 `bin/pip`의
 shebang도 절대 경로다. 저장소를 다른 경로로 옮기면 둘 다 없는 경로를 가리킨다.
 
-문제는 이때 `activate`가 오류를 내지 않는다는 것이다. 조용히 실패하고 시스템 python이
+이때 `activate`는 오류를 내지 않고 조용히 실패하고 시스템 python이
 잡힌다. 그 상태로 빌드하면 엉뚱한 패키지 버전이 쓰인다.
 
 저장소를 옮겼으면 venv를 다시 만든다.
@@ -109,8 +109,8 @@ git -C u-boot apply patches/*.patch
 소스에서 나오지 않는 조각도 있다. TI가 바이너리로만 배포하는 펌웨어다.
 
 ```
-curl -L -o ti-linux-firmware/ti-sysfw/ti-fs-firmware-am62x-hs-fs-enc.bin  https://raw.githubusercontent.com/TexasInstruments/ti-linux-firmware/11.02.11/ti-sysfw/ti-fs-firmware-am62x-hs-fs-enc.bin
-curl -L -o ti-linux-firmware/ti-sysfw/ti-fs-firmware-am62x-hs-fs-cert.bin https://raw.githubusercontent.com/TexasInstruments/ti-linux-firmware/11.02.11/ti-sysfw/ti-fs-firmware-am62x-hs-fs-cert.bin
+curl -L --create-dirs -o ti-linux-firmware/ti-sysfw/ti-fs-firmware-am62x-hs-fs-enc.bin https://raw.githubusercontent.com/TexasInstruments/ti-linux-firmware/11.02.11/ti-sysfw/ti-fs-firmware-am62x-hs-fs-enc.bin
+curl -L --create-dirs -o ti-linux-firmware/ti-sysfw/ti-fs-firmware-am62x-hs-fs-cert.bin https://raw.githubusercontent.com/TexasInstruments/ti-linux-firmware/11.02.11/ti-sysfw/ti-fs-firmware-am62x-hs-fs-cert.bin
 curl -L --create-dirs -o ti-linux-firmware/ti-dm/am62xx/ipc_echo_testb_mcu1_0_release_strip.xer5f https://raw.githubusercontent.com/TexasInstruments/ti-linux-firmware/11.02.11/ti-dm/am62xx/ipc_echo_testb_mcu1_0_release_strip.xer5f
 ```
 

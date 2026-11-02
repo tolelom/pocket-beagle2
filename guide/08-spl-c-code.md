@@ -34,8 +34,8 @@ board_init_r()                          Trying to boot from DFU
 jump_to_image()                         Starting ATF on ARM64 core...
 ```
 
-이 보드 소스에는 배너와 `>>> tolelom log 2: DDR is up` 두 줄이 직접 넣은 것으로 들어
-있다. 위 표에서는 뺐다. `DDR is up`은 `uclass_get_device(UCLASS_RAM, 0)` 바로 뒤에
+이 보드 소스에는 배너와 `>>> tolelom log 2: DDR is up` 두 줄이 직접 추가되어 있다.
+위 표에서는 뺐다. `DDR is up`은 `uclass_get_device(UCLASS_RAM, 0)` 바로 뒤에
 찍힌다.
 
 이 대응을 알면 부팅이 멈췄을 때 어디까지 갔는지 바로 짚을 수 있다. 예를 들어 배너가
@@ -52,7 +52,7 @@ jump_to_image()                         Starting ATF on ARM64 core...
 `preloader_console_init()`이 콘솔을 연다.
 
 이 구간에서 문제가 생기면 아무 메시지 없이 멈춘다. 진단 수단이 없는 구간이라
-[06. 직접 확인해보기](06-hands-on.md)의 정적 검증이 중요해지는 이유다.
+[06. 직접 확인해보기](06-hands-on.md)의 정적 검증이 중요하다.
 
 ## 8-3. EEPROM 읽기가 두 번 나오는 이유
 
@@ -72,8 +72,8 @@ return update_ddrss_timings();
 RAM 크기를 확정하고, 디바이스 트리의 메모리 노드를 그 값으로 고치고, DDR 타이밍을
 갱신한다. 이 안에서 EEPROM을 읽는 함수가 여러 번 불려 메시지가 셋 나온다.
 
-뒤의 둘은 `spl_enable_cache()` 안에서 나온다. 캐시를 켜는 함수가 왜 EEPROM을 읽나
-싶지만, 그 안에서 `dram_init()`을 부르기 때문이다.
+뒤의 둘은 `spl_enable_cache()` 안에서 나온다. 캐시를 켜는 함수 안에서 `dram_init()`을 부르기 때문에 EEPROM을 읽게
+된다.
 
 ```c
 void spl_enable_cache(void)
@@ -116,16 +116,15 @@ POCKETBEAGL2A1I   am625   1GB
 
 이름 12번째 자리부터 `2A1I`면 1GB, 아니면 512MB다.
 
-**여기가 EEPROM 실패와 이어진다.** 읽기가 실패하면 함수가 기본값을 돌려주고 RAM은
-512MB로 잡힌다. 우리 보드에서 실제로 그렇게 되고 있다.
+**EEPROM 실패와 이어지는 지점이다.** 읽기가 실패하면 함수가 기본값을 돌려주고 RAM은
+512MB로 잡힌다. 이 보드에서 실제로 그렇게 되고 있다.
 
 이 보드에서는 맞는 값이다. DDR 타이밍 파일 헤더가 `Density: 4Gb`, `Number of Ranks: 1`로
 적혀 있어 512MB가 맞고, `bdinfo` 보고와도 일치한다.
 
 ## 8-5. DDR은 드라이버 모델이 켠다
 
-DDR 초기화 코드가 `board_init_f` 안에 통째로 들어 있을 것 같지만 그렇지 않다. 한
-줄이다.
+`board_init_f` 안에서 DDR 초기화는 한 줄이다.
 
 ```c
 if (IS_ENABLED(CONFIG_K3_AM64_DDRSS)) {
@@ -176,7 +175,7 @@ spl_perform_arch_fixups()
 jump_to_image()                          다음 단계로 넘어간다
 ```
 
-우리 로그의 `Trying to boot from DFU`는 `boot_from_devices()`가 찍는 것이다.
+이 보드 로그의 `Trying to boot from DFU`는 `boot_from_devices()`가 찍는 것이다.
 
 `spl.c`에는 로드한 이미지의 os 종류를 보고 `spl_invoke_atf` 같은 다른 진입 함수를
 고르는 분기도 있다. 하지만 이 보드는 그 경로를 타지 않는다. 분기가 `CONFIG_SPL_ATF`
