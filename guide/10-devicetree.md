@@ -14,14 +14,14 @@ UART6을 쓴다.
 트리 구조로 노드를 적고, 각 노드에 `compatible`(어느 드라이버가 다룰지), `reg`(레지스터
 주소), 그밖의 속성을 단다. 드라이버는 `compatible`로 자기 노드를 찾아 붙는다.
 
-U-Boot도 같은 방식을 쓴다. [08. SPL의 C 구간](08-spl-c-code.md)에서 본
+U-Boot도 같은 방식을 쓴다. SPL이 DDR을 켤 때 부르는
 `uclass_get_device(UCLASS_RAM, 0)` 한 줄이 DDR 드라이버를 프로브할 수 있는 것도, DT에
 그 노드가 있고 `compatible`이 드라이버와 맞기 때문이다.
 
 ## 10-2. SPL은 왜 DT가 따로인가
 
-이유는 크기다. [02. 부팅은 어떻게 일어나는가](02-boot-flow.md)에서 본 SRAM 제약이
-여기에도 걸린다.
+이유는 크기다. SPL은 수백 KB짜리 온칩 SRAM에 들어가야 하고, 그 제약이 여기에도
+걸린다.
 
 이 보드의 두 DT를 재보면 차이가 분명하다.
 
@@ -70,7 +70,7 @@ DT를 걸러 SPL용을 만드는데, 남기는 것이 이렇다.
 
 이 규칙이 만드는 함정이 있다. 노드를 지우는 것은 참조까지 정리해주지 않는다.
 
-[05. DFU로 부팅시키기](05-dfu.md)에서 본 경고가 정확히 그 경우다.
+DFU 가젯이 올라올 때 찍히는 dwc3 경고가 정확히 그 경우다.
 
 ```
 dwc3-am62 dwc3-usb@f900000: unable to get ti,syscon-phy-pll-refclk regmap

@@ -2,8 +2,8 @@
 
 > 어셈블리가 판을 깔고 나면 C 코드가 시작된다. DDR을 켜고 다음 단계를 불러오는 실제 작업이 여기서 일어난다. 콘솔에 찍히는 줄과 코드가 어떻게 대응하는지 나란히 놓고 본다.
 
-앞 장([07. SPL 코드 읽기](07-spl-code.md))이 `board_init_f`에 닿기까지였다면 이 장은
-그다음이다.
+R5 SPL은 어셈블리 구간을 지나 `board_init_f`에서 C로 넘어온다. 이 장은 그 지점부터
+다룬다. 어셈블리 구간은 [07. SPL 코드 읽기](07-spl-code.md)에 있다.
 
 ## 8-1. 콘솔 로그와 코드를 나란히 놓기
 
@@ -35,7 +35,7 @@ jump_to_image()                         Starting ATF on ARM64 core...
 ```
 
 이 보드 소스에는 배너와 `>>> tolelom log 2: DDR is up` 두 줄이 직접 추가되어 있다.
-위 표에서는 뺐다. `DDR is up`은 `uclass_get_device(UCLASS_RAM, 0)` 바로 뒤에
+위 목록에서는 뺐다. `DDR is up`은 `uclass_get_device(UCLASS_RAM, 0)` 바로 뒤에
 찍힌다.
 
 이 대응을 알면 부팅이 멈췄을 때 어디까지 갔는지 바로 짚을 수 있다. 예를 들어 배너가

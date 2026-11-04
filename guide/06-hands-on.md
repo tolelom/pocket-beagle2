@@ -1,6 +1,6 @@
 # 06. 직접 확인해보기
 
-> 앞 장들에 적힌 사실을 직접 확인해보는 방법이다.
+> 부팅 구조와 보드에 관한 사실을 보드와 호스트에서 직접 확인해보는 방법이다.
 
 각 절은 독립적이다. 순서대로 할 필요 없이 궁금한 것부터 보면 된다.
 
@@ -107,8 +107,8 @@ Bus 3  i2c@2b200000  wkup_i2c0   pmic@30
 Bus 4  i2c@20010000  main_i2c1   전 주소 타임아웃
 ```
 
-[01. 보드와 칩](01-hardware.md)에서 미뤄둔 SPL 메시지가 이것이다. 부팅할 때마다
-찍힌다.
+SPL이 EEPROM을 읽어 보드 모델과 RAM 용량을 판별하려다 실패할 때 남기는 메시지가
+이것이다. 부팅할 때마다 찍힌다.
 
 ```
 EEPROM not available at 0x50, trying to read at 0x51
@@ -228,7 +228,7 @@ out/a53/tools/dumpimage -T flat_dt -p 0 -o atf.bin out/a53/tispl.bin
 필요한 것은 부트 파티션뿐이고 그건 이미지 앞쪽에 있으므로 앞부분만 뽑으면 된다.
 
 ```
-xzcat ~/Downloads/pb2-images/*iot*.img.xz | dd of=head.img bs=1M count=280 iflag=fullblock
+xzcat <내려받은 벤더 이미지 위치>/*iot*.img.xz | dd of=head.img bs=1M count=280 iflag=fullblock
 fdisk -l head.img
 dd if=head.img of=boot.fat bs=512 skip=2048 count=524288
 ```

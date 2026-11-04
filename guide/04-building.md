@@ -38,8 +38,8 @@ K3는 2패스 빌드다. 같은 U-Boot 소스를 설정만 바꿔 두 번 빌드
 - **R5 패스**가 `tiboot3.bin`을 만든다. Cortex-R5용이라 32비트 ARM으로 컴파일된다.
 - **A53 패스**가 `tispl.bin`과 `u-boot.img`를 만든다. Cortex-A53용이라 64비트다.
 
-앞 장에서 본 SPL 배너 2회가 이것 때문이다. 같은 바이너리가 두 번 도는 게 아니라
-아예 다른 두 바이너리다.
+부팅 로그에 SPL 배너가 2회 찍히는 것이 이것 때문이다. 같은 바이너리가 두 번 도는 게
+아니라 아예 다른 두 바이너리다.
 
 R5 패스가 요구하는 외부 blob은 ti-linux-firmware의
 `ti-sysfw/ti-fs-firmware-am62x-hs-fs-enc.bin`(TIFS 펌웨어)과

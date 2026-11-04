@@ -68,8 +68,9 @@ SPL: Unsupported Boot Device!
 "DFU로 부팅해야 한다"는 것까지는 안다. 그런데 그 장치에서 이미지를 읽어올 로더가 이
 빌드에 컴파일되어 있지 않다.
 
-배포되는 `tiboot3.bin`은 SD 부팅용이라 DFU 로더가 빠져 있는 것이다. 앞 장에서 본
-SRAM 예산 문제와 이어진다. 넣을 자리가 없다.
+배포되는 `tiboot3.bin`은 SD 부팅용이라 DFU 로더가 빠져 있는 것이다. R5 SPL은
+수백 KB짜리 온칩 SRAM에 들어가야 해서 SD 로더와 DFU 로더를 한 바이너리에 함께 넣을
+자리가 없다.
 
 ## 5-4. DFU 로더를 넣은 빌드
 
@@ -109,7 +110,8 @@ get_boot_device()                      arch/arm/mach-k3/am62x/boot.c
 
 ## 5-5. 전송 주소가 맞아야 한다
 
-앞 장의 주소 문제와 성격이 같은 문제가 한 번 더 있다.
+U-Boot·TF-A·OP-TEE의 로드 주소를 서로 맞춰야 하는 것과 성격이 같은 문제가 한 번 더
+있다.
 
 DFU가 데이터를 쓰는 주소는 환경변수 `dfu_alt_info_ram`이 정한다. 그런데 SPL이 FIT을
 읽는 주소는 `CONFIG_SPL_LOAD_FIT_ADDRESS`다. 두 값이 다른 곳에 적혀 있고, 어긋나면
@@ -182,8 +184,8 @@ dwc3-am62 dwc3-usb@f900000: unable to get ti,syscon-phy-pll-refclk regmap
    원래대로 부팅한다. 이게 DFU로 실험하는 가장 큰 이유다.
 2. **보드에서 재설치.** `/opt/u-boot/bb-u-boot-pocketbeagle2/install-microsd.sh`를
    실행한다. 패키지가 원본 `tiboot3.bin`·`tispl.bin`·`u-boot.img`를 이 경로에 보관한다.
-3. **SD 재굽기.** `~/Downloads/pb2-images/`의 이미지로 다시 굽는다. `sysconf.txt`
-   재설정과 ssh 키 재등록이 뒤따른다.
+3. **SD 재굽기.** 내려받은 벤더 배포 이미지로 SD 카드를 다시 굽는다. 카드에 있던
+   설정과 데이터는 지워진다.
 
 ## 5-9. 콘솔 인자
 

@@ -17,7 +17,7 @@ Core:  89 devices, 32 uclasses, devicetree: separate
 ```
 
 `89 devices, 32 uclasses`를 보면 규모 차이가 드러난다. SPL은
-[10. 디바이스 트리와 SPL](10-devicetree.md)에서 본 대로 노드 64개짜리 DT로 도는데,
+전용으로 줄인 노드 64개짜리 DT로 도는데,
 본체는 훨씬 많은 장치를 잡는다. DRAM 위에서 돌아 SRAM 크기 제약을 받지 않는다.
 
 `Reset reason: POR`은 전원을 새로 넣은 부팅(Power On Reset)이라는 뜻이다. 소프트웨어
@@ -96,7 +96,7 @@ Working FDT set to 88000000
 
 **커맨드 라인.** `console=`이 콘솔 장치를, `root=`가 루트 파일시스템 파티션을 지정한다.
 `earlycon=`은 커널이 정식 콘솔 드라이버를 올리기 전에 쓸 임시 출력이고, 주소
-0x02860000이 [04. 소스 받기와 빌드](04-building.md)에서 본 `main_uart6`다.
+0x02860000이 이 보드의 콘솔 UART인 `main_uart6`다.
 
 **디바이스 트리.** 리눅스용 전체 DT다. 0x88000000에 읽어 들였다가 DRAM 위쪽
 (0x98ecd000)으로 옮긴다. 커널이 자기 아래쪽 메모리를 자유롭게 쓰게 비켜주는 것이다.

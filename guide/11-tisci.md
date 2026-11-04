@@ -7,7 +7,7 @@
 보통의 MCU라면 클럭 레지스터에 비트를 쓰면 페리페럴이 켜진다. 이 칩은 다르다. 전원·클럭·리셋
 레지스터에 직접 접근하면 방화벽에 막힌다.
 
-접근 권한을 TIFS가 쥐고 있기 때문이다. [01. 보드와 칩](01-hardware.md)에서 본 SMS 안의
+접근 권한을 TIFS가 쥐고 있기 때문이다. SMS(Security Management Subsystem) 안의
 M4F가 그 역할이고, 사용자 코드를 올릴 수 없다.
 
 이유는 안전과 격리다. 코어가 여럿이고 리눅스와 실시간 코드가 함께 도는 칩에서, 한쪽이
@@ -100,12 +100,12 @@ SYSFW ABI: 4.0 (firmware rev 0x000b '11.2.5--v11.02.05 (Fancy Rat)')
 `arch/arm/mach-k3/common.c`의 `k3_sysfw_print_ver()`가 찍는 줄이다. TIFS와 통신이
 되어야 버전을 물어볼 수 있으므로, 이 줄이 나왔다면 TISCI 경로가 살아 있다는 뜻이다.
 
-[08. SPL의 C 구간](08-spl-c-code.md)의 대응표에서 이 줄이 `k3_sysfw_loader()` 뒤에
+SPL 실행 순서에서 이 줄이 `k3_sysfw_loader()` 뒤에
 오는 것도 같은 이유다. 펌웨어를 올리고 나서야 말을 걸 수 있다.
 
 ## 11-5. A53을 깨우는 것도 같은 방식이다
 
-[08. SPL의 C 구간](08-spl-c-code.md)에서 R5가 `rproc_start(1)`로 A53을 깨운다고 했다.
+R5 SPL은 `rproc_start(1)`로 A53을 깨운다.
 그 `1`이 무엇인지 디바이스 트리에 적혀 있다.
 
 ```
@@ -168,7 +168,7 @@ deassert를 부르는 자리는 없다.
 `remoteproc0 = &sysctrler`가 SMS의 M4F를 가리킨다. R5 SPL이 TIFS 펌웨어를 올릴 때
 쓰는 것이 이 항목이다.
 
-[08. SPL의 C 구간](08-spl-c-code.md)에서 본 `jump_to_image` 구현이 `rproc_init()`을
+R5 SPL의 `jump_to_image` 구현이 `rproc_init()`을
 먼저 부르는 이유도 여기 있다. DM 펌웨어를 R5에 올리고 A53을 깨우는 두 작업이 모두
 remoteproc 프레임워크를 거친다.
 
@@ -176,16 +176,14 @@ remoteproc 프레임워크를 거친다.
 
 ## 11-7. 리눅스에서 보기
 
-리눅스가 뜬 뒤에도 같은 구조가 이어진다. [01. 보드와 칩](01-hardware.md)에서 본 M4F
-펌웨어 오류가 리눅스 쪽 remoteproc이 같은 경로를 타다가 내는 것이다.
+리눅스가 뜬 뒤에도 같은 구조가 이어진다. 리눅스 부팅 로그의 M4F
+펌웨어 오류(`am62-mcu-m4f0_0-fw failed with error -2`)가 리눅스 쪽 remoteproc이 같은 경로를 타다가 내는 것이다.
 
 번호를 그대로 믿으면 안 된다. `remoteproc0`이 R5 SPL의 DT에서는 SMS의 M4F를 가리키지만,
 리눅스가 쓰는 DT에서는 MCU 도메인의 M4F(`5000000.m4fss`)다. DT가 다르면 번호도 다른
 대상을 가리킨다.
 
-이 자리가 [브링업 로드맵](../roadmap.md) 5단계로 이어진다. M4F에 직접 만든 펌웨어를 올려
-A53과 메시지를 주고받게 하는 것이 그 단계의 목표이고, 그때 쓰는 것이 이 장에서 본
-구조다.
+M4F에 직접 만든 펌웨어를 올려 A53과 메시지를 주고받게 할 때도 이 구조를 쓴다.
 
 ## 정리
 
