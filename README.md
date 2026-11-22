@@ -1,8 +1,30 @@
-# PocketBeagle 2 부트로더 빌드
+# pocket-beagle2
 
-> PocketBeagle 2(Rev A1, AM6254)의 부트 체인을 소스에서 빌드해 보드에 올린다. ROM 다음 단계부터 U-Boot 셸까지 벤더 이미지 대신 직접 빌드한 이미지로 부팅한다.
+> PocketBeagle 2(Rev A1, AM6254)의 부트 체인을 소스에서 빌드해 보드에 올리는 가이드
 
-## 가이드
+U-Boot · TF-A · OP-TEE
+
+ROM 다음 단계부터 U-Boot 셸까지 벤더 이미지 대신 직접 빌드한 이미지로 부팅합니다.
+
+## 시작하기
+
+호스트는 Ubuntu 24.04 기준입니다. 보드 연결, 호스트 패키지, venv, 소스와 blob 받기는 [00. 준비하기](guide/00-setup.md)를 따릅니다.
+
+```bash
+./build-r5.sh    # R5 패스
+./build-a53.sh   # A53 패스
+```
+
+| 산출물 | 내용 |
+|---|---|
+| `out/r5/tiboot3.bin` | SD 부팅용 |
+| `out/r5-dfu/tiboot3.bin` | DFU 이어받기용 |
+| `out/a53/tispl.bin` | TF-A, OP-TEE, DM, A53 SPL을 담은 FIT |
+| `out/a53/u-boot.img` | U-Boot 본체 |
+
+SD를 건드리지 않고 DFU로 부팅시키는 절차는 [05장](guide/05-dfu.md)에 있습니다.
+
+## 문서
 
 | 장 | 내용 |
 |---|---|
@@ -22,49 +44,11 @@
 
 | 문서 | 내용 |
 |---|---|
-| [브링업 로드맵](roadmap.md) | 단계별 계획과 진행 상태 |
-
-## 용어
-
-| 말 | 뜻 |
-|---|---|
-| SPL | U-Boot의 축소판 로더. SRAM에서 돌며 DRAM을 켜고 다음 단계를 읽는다 |
-| TF-A | ARM Trusted Firmware-A. 이 보드에서는 BL31만 쓴다 |
-| OP-TEE | TrustZone 위에서 리눅스와 나란히 도는 보안 OS |
-| BL31, BL32, BL33 | TF-A의 단계 이름. 보안 감시자, 보안 OS(OP-TEE), 일반 세계 부트로더(U-Boot) |
-| FIT | 여러 이미지와 메타데이터를 하나로 묶는 형식 |
-| DT, DTB | 디바이스 트리와 그 컴파일 결과 |
-| DFU | USB 펌웨어 전송 규격. SD 없이 부트로더를 보낼 때 쓴다 |
-| binman | U-Boot 빌드의 이미지 조립 도구 |
-| 스트랩 | 전원 인가 시 저항으로 정해지는 설정 |
-| phandle | DT에서 다른 노드를 가리키는 번호 |
-| bootph | DT 노드를 쓸 부팅 단계를 표시하는 태그 |
-| TISCI | 코어가 TIFS에 전원·클럭·리셋을 요청하는 메시지 규격 |
-| remoteproc | 다른 코어에 펌웨어를 올리고 리셋을 푸는 리눅스 프레임워크 |
-
-## 저장소 구성
-
-```
-guide/              00~12장
-roadmap.md          브링업 로드맵
-build-r5.sh         R5 패스 빌드 (tiboot3.bin)
-build-a53.sh        A53 패스 빌드 (tispl.bin, u-boot.img)
-clean-serial-log.py 시리얼 로그에서 제어 문자 제거 (*-clean.log 생성)
-patches/            u-boot 트리 수정분
-logs/               시리얼 콘솔 캡처
-```
-
-아래 경로는 git에 없고 따로 받거나 만든다.
-
-| 경로 | 내용 | 받는 방법 |
-|---|---|---|
-| `u-boot/`, `trusted-firmware-a/`, `optee_os/` | 소스 트리 | [00장](guide/00-setup.md) 0-4 |
-| `ti-linux-firmware/` | TI 펌웨어 blob | [00장](guide/00-setup.md) 0-4 |
-| `datasheets/` | SRM, TRM, 데이터시트 | [00장](guide/00-setup.md) 0-4 |
-| `venv/` | 빌드용 파이썬 환경 | [00장](guide/00-setup.md) 0-3 |
-| `out/` | 빌드 산출물 | `build-r5.sh`, `build-a53.sh` |
-| `logs/*-clean.log` | 정리한 로그 | `clean-serial-log.py` |
+| [roadmap.md](roadmap.md) | 브링업 단계별 계획과 진행 상태 |
+| `patches/` | u-boot 트리 수정분 |
+| `logs/` | 시리얼 콘솔 캡처 |
+| `clean-serial-log.py` | 시리얼 로그에서 제어 문자 제거, 원본 옆에 `*-clean.log` 생성 |
 
 ## 라이선스
 
-문서와 로그는 CC BY 4.0, 스크립트는 MIT, `patches/`는 U-Boot와 같은 GPL-2.0이다. 상세는 [LICENSE](LICENSE).
+문서와 로그는 CC BY 4.0, 스크립트는 MIT, `patches/`는 U-Boot와 같은 GPL-2.0입니다. 상세는 [LICENSE](LICENSE)에 있습니다.
