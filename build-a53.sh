@@ -46,9 +46,9 @@ preflight() {
         command -v "$t" >/dev/null 2>&1 || miss+=("호스트 도구 $t")
     done
 
-    [ -d "$UB" ]    || miss+=("u-boot 소스 $UB  -> README 의 클론 명령")
-    [ -d "$TFA" ]   || miss+=("TF-A 소스 $TFA  -> README 의 클론 명령")
-    [ -d "$OPTEE" ] || miss+=("OP-TEE 소스 $OPTEE  -> README 의 클론 명령")
+    [ -d "$UB" ]    || miss+=("u-boot 소스 $UB  -> guide/00-setup.md 의 클론 명령")
+    [ -d "$TFA" ]   || miss+=("TF-A 소스 $TFA  -> guide/00-setup.md 의 클론 명령")
+    [ -d "$OPTEE" ] || miss+=("OP-TEE 소스 $OPTEE  -> guide/00-setup.md 의 클론 명령")
 
     [ -f "$UB/configs/am62_pocketbeagle2_a53_defconfig" ] \
         || miss+=("defconfig am62_pocketbeagle2_a53_defconfig 가 u-boot 트리에 없음")
@@ -57,9 +57,9 @@ preflight() {
     # k3-am62-pocketbeagle2-u-boot.dtsi 의 ti-dm 노드다. 없으면 binman 이
     # 그 자리를 비운 이미지를 만들고 빌드는 통과한다.
     [ -f "$FW/ti-dm/am62xx/ipc_echo_testb_mcu1_0_release_strip.xer5f" ] \
-        || miss+=("DM 펌웨어 blob  -> README 의 curl 명령")
+        || miss+=("DM 펌웨어 blob  -> guide/00-setup.md 의 curl 명령")
 
-    [ -f "$VENV/bin/activate" ] || miss+=("venv $VENV  -> README 의 venv 구성 명령")
+    [ -f "$VENV/bin/activate" ] || miss+=("venv $VENV  -> guide/00-setup.md 의 venv 구성 명령")
 
     if [ ${#miss[@]} -ne 0 ]; then
         echo "빌드 전제가 갖춰지지 않았다:"
@@ -76,7 +76,7 @@ preflight() {
     local m
     for m in cryptography elftools setuptools; do
         python3 -c "import $m" 2>/dev/null || {
-            echo "venv 에 $m 이(가) 없다. README 의 venv 구성 명령을 다시 실행한다:"
+            echo "venv 에 $m 이(가) 없다. guide/00-setup.md 의 venv 구성 명령을 다시 실행한다:"
             echo "  rm -rf venv && /usr/bin/python3 -m venv venv"
             echo "  venv/bin/python3 -m pip install -r u-boot/tools/binman/requirements.txt setuptools cryptography"
             exit 1
