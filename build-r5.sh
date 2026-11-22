@@ -45,20 +45,20 @@ preflight() {
     pkg-config --exists libssl libcrypto 2>/dev/null \
         || miss+=("OpenSSL 개발 헤더  -> apt install libssl-dev")
 
-    [ -d "$UB" ] || miss+=("u-boot 소스 $UB  -> README 의 클론 명령")
+    [ -d "$UB" ] || miss+=("u-boot 소스 $UB  -> guide/00-setup.md 의 클론 명령")
     [ -f "$UB/configs/am62_pocketbeagle2_r5_defconfig" ] \
         || miss+=("defconfig am62_pocketbeagle2_r5_defconfig 가 u-boot 트리에 없음")
 
     # BINMAN_INDIRS 가 찾는 TIFS blob 2개. ti-linux-firmware 전체 클론은 필요 없다.
     local b
     for b in ti-fs-firmware-am62x-hs-fs-enc.bin ti-fs-firmware-am62x-hs-fs-cert.bin; do
-        [ -f "$FW/ti-sysfw/$b" ] || miss+=("TIFS blob $FW/ti-sysfw/$b  -> README 의 curl 명령")
+        [ -f "$FW/ti-sysfw/$b" ] || miss+=("TIFS blob $FW/ti-sysfw/$b  -> guide/00-setup.md 의 curl 명령")
     done
 
     # binman 이 요구하는 정확한 파이썬 패키지 버전 (tools/binman/requirements.txt).
     # apt 의 pyelftools 는 버전이 낮아 빌드가 깨지므로 venv 를 쓴다.
     [ -f "$VENV/bin/activate" ] \
-        || miss+=("venv $VENV  -> README 의 venv 구성 명령")
+        || miss+=("venv $VENV  -> guide/00-setup.md 의 venv 구성 명령")
 
     if [ ${#miss[@]} -ne 0 ]; then
         echo "빌드 전제가 갖춰지지 않았다:"
@@ -75,7 +75,7 @@ preflight() {
     local m
     for m in elftools setuptools; do
         python3 -c "import $m" 2>/dev/null || {
-            echo "venv 에 $m 이(가) 없다. README 의 venv 구성 명령을 다시 실행한다:"
+            echo "venv 에 $m 이(가) 없다. guide/00-setup.md 의 venv 구성 명령을 다시 실행한다:"
             echo "  venv/bin/pip install -r u-boot/tools/binman/requirements.txt setuptools"
             exit 1
         }
